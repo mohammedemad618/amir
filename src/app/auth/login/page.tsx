@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,11 +13,10 @@ import { LottieAnimation } from '@/components/ui/LottieAnimation';
 import loginAnimation from '../../../../public/animations/login.json';
 import { DecorativeCircles } from '@/components/ui/DecorativeCircles';
 import { DotPattern } from '@/components/ui/DotPattern';
-import type { z } from 'zod';
 
 type FormMode = 'login' | 'register';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialMode = searchParams.get('mode') === 'register' ? 'register' : 'login';
@@ -174,6 +173,18 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="container section flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
 
