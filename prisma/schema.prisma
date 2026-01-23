@@ -33,7 +33,31 @@ model Course {
   thumbnail   String?
   createdAt   DateTime     @default(now())
   enrollments Enrollment[]
+  modules     Module[]
   resources   CourseResource[]
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  courseId  String
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  moduleId    String
+  title       String
+  content     String?  // Markdown or HTML content
+  videoUrl    String?
+  duration    Int?     // duration in minutes
+  order       Int      @default(0)
+  isFree      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 }
 
 model CourseResource {
@@ -53,6 +77,7 @@ model Enrollment {
   courseId        String
   status          String          @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
   progressPercent Int             @default(0) // 0-100
+  completedLessons String[]       @default([]) // Array of Lesson IDs
   certificateId   String?
   certificateUrl  String?
   createdAt       DateTime        @default(now())

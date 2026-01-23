@@ -1,6 +1,5 @@
 ﻿import React from 'react';
 import Link from 'next/link';
-import { Credits } from '@/components/ui/Credits';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 
@@ -48,12 +47,12 @@ export const Footer: React.FC = () => {
                 ع
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-black text-white leading-none">د. عامر سلمان</span>
+                <span className="text-xl font-black text-white leading-none">عامر عرابي</span>
                 <span className="text-xs font-bold text-primary-400 uppercase tracking-widest mt-1">منصة التدريب الطبي</span>
               </div>
             </Link>
             <p className="text-sm leading-relaxed text-ink-300 font-medium">
-              دكتوراه في علوم التغذية العلاجية والعلاج الوظيفي بدمشق، سوريا. نلتزم بتقديم أرقى المناهج التدريبية التي تدمج بين النظرية والتطبيق العملي.
+              دكتوراه في علوم التغذية العلاجية والعلاج الوظيفي بطرطوس، سوريا. نلتزم بتقديم أرقى المناهج التدريبية التي تدمج بين النظرية والتطبيق العملي.
             </p>
             {/* Social Placeholder */}
             <div className="flex gap-4">
@@ -90,7 +89,7 @@ export const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs text-ink-400 font-bold uppercase tracking-widest mb-1">الهاتف</p>
-                  <p className="text-white font-black">+00963985391696</p>
+                  <p className="text-white font-black">+963985391696</p>
                 </div>
               </li>
               <li className="flex gap-4">
@@ -99,7 +98,7 @@ export const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs text-ink-400 font-bold uppercase tracking-widest mb-1">الموقع</p>
-                  <p className="text-white font-black">سوريا – اللاذقية</p>
+                  <p className="text-white font-black">سوريا – طرطوس</p>
                 </div>
               </li>
             </ul>
@@ -111,20 +110,16 @@ export const Footer: React.FC = () => {
             <p className="text-sm leading-loose text-ink-300 mb-6 font-medium">
               نهدف أن نكون الوجهة الأولى لكل ممارس صحي يبحث عن التميز، مع توفير كافة الأدوات التعليمية والرقمية اللازمة.
             </p>
-            <Link href="/auth/register">
+            <Link href="/courses">
               <Badge variant="primary" className="py-2.5 px-6 rounded-xl hover:scale-105 transition-transform cursor-pointer">انضم للمنصة الآن</Badge>
             </Link>
           </div>
         </div>
 
-        {/* Credits */}
-        <div className="pt-10 border-t border-white/5">
-          <Credits />
-        </div>
 
         {/* Footer Bottom */}
         <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-6 text-sm font-bold text-ink-500 bg-white/5 p-6 rounded-2xl border border-white/5">
-          <p>© {new Date().getFullYear()} الدكتور عامر سلمان عرابي. جميع الحقوق محفوظة.</p>
+          <p>© {new Date().getFullYear()} عامر عرابي. جميع الحقوق محفوظة.</p>
           <div className="flex gap-8">
             <Link href="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
             <Link href="/terms" className="hover:text-white transition-colors">الشروط والأحكام</Link>

@@ -113,11 +113,11 @@ export function ButterfliesBackground() {
 
           // سرعة حركة الأجنحة (سرعة الرفرفة)
           // القيم المنخفضة = حركة بطيئة، القيم العالية = حركة سريعة
-          wingsSpeed: 0.25,
+          wingsSpeed: 0.12,
 
           // مقياس إزاحة الأجنحة (مدى حركة الأجنحة أثناء الرفرفة)
           // القيم العالية = حركة أجنحة أوسع وأكثر وضوحاً
-          wingsDisplacementScale: 1.25,
+          wingsDisplacementScale: 1.0,
 
           // مقياس إحداثيات الضوضاء (noise) المستخدمة في الحركة العشوائية
           // يحدد مدى تأثير الضوضاء على حركة الفراشات
@@ -125,11 +125,11 @@ export function ButterfliesBackground() {
 
           // معامل الوقت للضوضاء (سرعة تغير الضوضاء مع الوقت)
           // يحدد مدى سرعة تغير الأنماط العشوائية في الحركة
-          noiseTimeCoef: 0.0005,
+          noiseTimeCoef: 0.0002,
 
           // شدة الضوضاء (قوة التأثير العشوائي على الحركة)
           // القيم العالية = حركة أكثر عشوائية وغير منتظمة
-          noiseIntensity: 0.00025,
+          noiseIntensity: 0.00015,
 
           // نصف قطر الجذب الأول (المسافة التي تبدأ فيها الفراشات بالتفاعل مع بعضها)
           // يحدد مدى قرب الفراشات من بعضها قبل أن تبدأ بالتفاعل
@@ -141,7 +141,7 @@ export function ButterfliesBackground() {
 
           // السرعة القصوى للفراشات (أعلى سرعة يمكن أن تصل إليها)
           // يحدد الحد الأقصى لسرعة الحركة - القيم العالية = حركة أسرع
-          maxVelocity: 0.09
+          maxVelocity: 0.04
         })
 
       } catch (error) {
@@ -177,7 +177,8 @@ export function ButterfliesBackground() {
         width: '100%',
         height: '100%',
         zIndex: -1,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        opacity: 0.35
       }}
     />
   )

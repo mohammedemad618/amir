@@ -12,6 +12,8 @@ import { Alert } from '@/components/ui/Alert';
 import { MedicalIllustration } from '@/components/ui/MedicalIllustration';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { IconBadge } from '@/components/ui/IconBadge';
+import { LottieAnimation } from '@/components/ui/LottieAnimation';
+import chatAnimation from '../../../public/animations/chat-doctor.json';
 import { DecorativeCircles } from '@/components/ui/DecorativeCircles';
 import { DotPattern } from '@/components/ui/DotPattern';
 import { Badge } from '@/components/ui/Badge';
@@ -45,7 +47,7 @@ export default function ContactPage() {
     }
   };
 
-  const phoneNumber = '+00963985391696';
+  const phoneNumber = '+963985391696';
   const whatsappLink = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}`;
 
   return (
@@ -111,7 +113,7 @@ export default function ContactPage() {
                 </IconBadge>
                 <div>
                   <div className="text-xs text-ink-500 font-bold uppercase tracking-wider mb-0.5">الموقع</div>
-                  <p className="text-lg font-black text-ink-900">سوريا - دمشق</p>
+                  <p className="text-lg font-black text-ink-900">سوريا - طرطوس</p>
                 </div>
               </div>
             </div>
@@ -129,15 +131,14 @@ export default function ContactPage() {
             </Button>
           </Card>
 
-          <Card variant="modern" className="p-6 bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-xl group overflow-hidden relative">
+          <Card variant="modern" className="p-6 bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-xl group overflow-hidden relative text-center">
             <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 blur-2xl rounded-full translate-x-12 -translate-y-12" />
-            <div className="relative flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm border border-white/30">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-black">ساعات الاستجابة</h3>
+            <LottieAnimation
+              animationData={chatAnimation}
+              className="w-48 h-48 mx-auto -mb-6"
+            />
+            <div className="relative flex items-center justify-center gap-4 mb-4">
+              <h3 className="text-xl font-black text-center">ساعات الاستجابة</h3>
             </div>
             <div className="space-y-2 opacity-90 font-bold">
               <p>نرد على كافة الاستفسارات خلال 24 ساعة.</p>

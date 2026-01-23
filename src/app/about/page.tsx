@@ -3,13 +3,14 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Card } from '@/components/ui/Card';
 import { MedicalIllustration } from '@/components/ui/MedicalIllustration';
-import { Credits } from '@/components/ui/Credits';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { IconBadge } from '@/components/ui/IconBadge';
 import { DecorativeCircles } from '@/components/ui/DecorativeCircles';
 import { DotPattern } from '@/components/ui/DotPattern';
 import { Badge } from '@/components/ui/Badge';
 import { clsx } from 'clsx';
+import { LottieAnimation } from '@/components/ui/LottieAnimation';
+import doctorAnimation from '../../../public/animations/doctor.json';
 
 export const metadata: Metadata = {
   title: 'عن الدكتور - منصة التدريب الطبي',
@@ -119,13 +120,9 @@ export default function AboutPage() {
           <div className="relative mx-auto lg:mx-0 max-w-[400px]">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-sky-500/20 blur-3xl rounded-full scale-90" aria-hidden="true" />
             <div className="relative z-10 p-4 bg-white/40 backdrop-blur-md rounded-[3rem] border border-white/60 shadow-glass overflow-hidden">
-              <Image
-                src="/images/doctor-hero.png"
-                alt="الدكتور عامر"
-                width={500}
-                height={600}
+              <LottieAnimation
+                animationData={doctorAnimation}
                 className="w-full rounded-[2.5rem] drop-shadow-xl hover:scale-[1.02] transition-transform duration-700"
-                priority
               />
             </div>
             {/* Experience Badge */}
@@ -152,7 +149,7 @@ export default function AboutPage() {
 
             <div className="flex flex-wrap gap-4 pt-4">
               {['تغذية علاجية', 'علاج وظيفي', 'تدريب مهني', 'تصميم مناهج'].map((tag, i) => (
-                <div key={tag} className="px-6 py-3 rounded-2xl border border-primary-100 bg-white/40 backdrop-blur-sm shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 font-bold text-primary-700">
+                <div key={tag} className="px-6 py-3 rounded-2xl border border-primary-100 bg-white/60 backdrop-blur-md shadow-sm hover:shadow-glow hover:-translate-y-1 transition-all duration-300 font-bold text-primary-700 hover-shine cursor-default">
                   {tag}
                 </div>
               ))}
@@ -174,18 +171,18 @@ export default function AboutPage() {
             <Card
               key={value.title}
               variant="modern"
-              className="p-8 space-y-6 animate-fade-up group relative overflow-hidden"
+              className="p-8 space-y-6 animate-fade-up group relative overflow-hidden h-full hover-shine shadow-lg hover:shadow-2xl transition-all duration-500"
               style={{ animationDelay: `${index * 150}ms` }}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-400/10 to-transparent rounded-bl-full -mr-16 -mt-16 group-hover:mr-0 group-hover:mt-0 transition-all duration-700" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-400/20 to-transparent rounded-bl-full -mr-16 -mt-16 group-hover:mr-0 group-hover:mt-0 transition-all duration-700" />
               <div className="relative">
-                <IconBadge tone={value.tone} className="w-14 h-14 rounded-2xl shadow-lg ring-4 ring-white/50 group-hover:scale-110 transition-transform duration-500">
+                <IconBadge tone={value.tone} className="w-16 h-16 rounded-2xl shadow-xl ring-4 ring-white/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   {value.icon}
                 </IconBadge>
               </div>
               <div className="space-y-3">
-                <h3 className="heading-3 text-xl group-hover:text-primary-600 transition-colors">{value.title}</h3>
-                <p className="body-md leading-relaxed">{value.description}</p>
+                <h3 className="heading-3 text-2xl group-hover:text-primary-600 transition-colors">{value.title}</h3>
+                <p className="body-md text-lg leading-relaxed text-ink-700">{value.description}</p>
               </div>
             </Card>
           ))}
@@ -226,20 +223,20 @@ export default function AboutPage() {
                 <div className="w-full md:w-[45%]">
                   <Card
                     variant="modern"
-                    className="p-6 group hover:border-primary-400 transition-all duration-500 hover:shadow-glow relative"
+                    className="p-7 group hover:border-primary-400 transition-all duration-500 hover:shadow-glow relative glass-card hover-shine"
                   >
-                    <div className="md:hidden inline-block px-4 py-1.5 rounded-full bg-primary-600 text-white font-black mb-4">
+                    <div className="md:hidden inline-block px-4 py-1.5 rounded-full bg-primary-600 text-white font-black mb-4 shadow-lg">
                       {item.year}
                     </div>
-                    <h4 className="text-xl font-bold text-ink-900 group-hover:text-primary-600 transition-colors">
+                    <h4 className="text-2xl font-black text-ink-900 group-hover:text-primary-600 transition-colors mb-2">
                       {item.title}
                     </h4>
-                    <p className="body-md mt-3 leading-relaxed">
+                    <p className="body-md text-lg mt-3 leading-relaxed text-ink-700">
                       {item.description}
                     </p>
                     <div className={clsx(
-                      "absolute top-8 hidden md:block w-4 h-4 bg-white border-t border-r border-ink-100 transition-colors group-hover:border-primary-400",
-                      idx % 2 === 0 ? "-right-2 rotate-45" : "-left-2 -rotate-[135deg]"
+                      "absolute top-8 hidden md:block w-5 h-5 bg-white border-t border-r border-ink-100 transition-colors group-hover:border-primary-400 rotate-45",
+                      idx % 2 === 0 ? "-right-2.5" : "-left-2.5 rotate-[225deg]"
                     )} />
                   </Card>
                 </div>
@@ -280,11 +277,9 @@ export default function AboutPage() {
           </div>
           <Card variant="glass" className="p-2 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-50 to-sky-50 border-2 border-white shadow-2xl skew-x-1 lg:skew-x-2">
             <div className="relative aspect-video rounded-[2rem] overflow-hidden">
-              <Image
-                src="/images/doctor-hero.png"
-                alt="التدريبات"
-                fill
-                className="object-cover opacity-80"
+              <LottieAnimation
+                animationData={doctorAnimation}
+                className="w-full opacity-80"
               />
               <div className="absolute inset-0 bg-primary-900/40 flex items-center justify-center">
                 <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/50 text-white hover:scale-110 transition-transform cursor-pointer">
@@ -298,12 +293,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section>
-        <Card variant="glass" className="p-8 rounded-[2rem] border-primary-100 shadow-xl overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-100/30 blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <Credits />
-        </Card>
-      </section>
     </div>
   );
 }

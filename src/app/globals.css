@@ -154,9 +154,74 @@
     border-radius: inherit;
     padding: 2px;
     background: linear-gradient(135deg, #0891B2, #22D3EE);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 15px rgba(8, 145, 178, 0.3);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 40px -10px rgba(8, 145, 178, 0.25);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  }
+
+  .glass-dark {
+    background: rgba(15, 23, 42, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); }
+  }
+
+  @keyframes shine {
+    from { transform: translateX(-100%) skewX(-15deg); }
+    to { transform: translateX(200%) skewX(-15deg); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 8s ease-in-out infinite;
+  }
+
+  .hover-shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hover-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: none;
+  }
+
+  .hover-shine:hover::after {
+    animation: shine 0.8s ease-out;
   }
 }
 
@@ -167,10 +232,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .animate-fade-up,
   .animate-fade-in,
-  .animate-float {
+  .animate-float,
+  .animate-pulse-slow {
     animation: none !important;
   }
 }

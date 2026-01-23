@@ -24,22 +24,24 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch('/api/auth/me');
+        const res = await fetch('/api/auth/me', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           setIsAuthenticated(true);
           setIsAdmin(data.user.role === 'ADMIN');
-        } else {
+        } else if (res.status === 401 || res.status === 403) {
           setIsAuthenticated(false);
           setIsAdmin(false);
         }
-      } catch {
-        setIsAuthenticated(false);
-        setIsAdmin(false);
+      } catch (err) {
+        console.error('Auth check failed:', err);
       }
     };
+
     checkAuth();
-  }, []);
+    window.addEventListener('auth-change', checkAuth);
+    return () => window.removeEventListener('auth-change', checkAuth);
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,6 +54,8 @@ export const Navbar: React.FC = () => {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     setIsAuthenticated(false);
+    setIsAdmin(false);
+    window.dispatchEvent(new Event('auth-change'));
     window.location.href = '/';
   };
 
@@ -74,7 +78,7 @@ export const Navbar: React.FC = () => {
               ع
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black text-ink-900 leading-none group-hover:text-primary-700 transition-colors">د. عامر سلمان</span>
+              <span className="text-lg font-black text-ink-900 leading-none group-hover:text-primary-700 transition-colors">عامر عرابي</span>
               <span className="text-[10px] font-bold text-primary-600 uppercase tracking-widest mt-0.5">منصة التدريب الطبي</span>
             </div>
           </Link>
@@ -126,7 +130,7 @@ export const Navbar: React.FC = () => {
                     تسجيل الدخول
                   </Button>
                 </Link>
-                <Link href="/auth/register">
+                <Link href="/auth/login?mode=register">
                   <Button variant="primary" size="sm" className="rounded-xl font-black px-6 shadow-lg shadow-primary-500/20 active:scale-95 transition-all">
                     ابدأ الآن
                   </Button>
@@ -204,7 +208,7 @@ export const Navbar: React.FC = () => {
                 <Link href="/auth/login" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full py-6 rounded-2xl font-bold">تسجيل الدخول</Button>
                 </Link>
-                <Link href="/auth/register" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/auth/login?mode=register" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="primary" className="w-full py-6 rounded-2xl text-lg font-black">إنشاء حساب</Button>
                 </Link>
               </>

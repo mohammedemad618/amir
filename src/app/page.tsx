@@ -8,6 +8,8 @@ import { IconBadge } from '@/components/ui/IconBadge';
 import { ButterfliesBackground } from '@/components/ButterfliesBackground';
 import { DecorativeCircles } from '@/components/ui/DecorativeCircles';
 import { DotPattern } from '@/components/ui/DotPattern';
+import { LottieAnimation } from '@/components/ui/LottieAnimation';
+import doctorAnimation from '../../public/animations/doctor.json';
 
 const stats = [
   { value: '20+', label: 'سنة خبرة' },
@@ -120,46 +122,47 @@ export default function HomePage() {
               <p className="body-lg max-w-2xl text-ink-700">
                 تعلم بإيقاعك مع محتوى عملي، مسارات تخصصية، وإشراف واضح يركز على النتائج.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 pt-2">
                 <Link href="/courses">
-                  <Button variant="primary" size="lg">
+                  <Button variant="primary" size="lg" className="hover-shine shadow-lg shadow-primary-500/20 px-8">
                     ابدأ المسار الآن
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button variant="outline" size="lg">
+                  <Button variant="outline" size="lg" className="px-8 border-2 hover:bg-white/50 backdrop-blur-sm">
                     تحدث مع فريقنا
                   </Button>
                 </Link>
               </div>
               <div className="grid grid-cols-2 gap-4 pt-4">
                 {stats.map((item, idx) => (
-                  <Card key={item.label} variant="modern" className="panel-pad-sm min-h-[96px] animate-scale-in" style={{ animationDelay: `${idx * 100}ms` }}>
-                    <div className="text-3xl font-display font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">{item.value}</div>
-                    <div className="text-sm font-semibold text-ink-600">{item.label}</div>
+                  <Card key={item.label} variant="modern" className="glass-card panel-pad-sm min-h-[96px] animate-scale-in group hover:scale-105 transition-all duration-300" style={{ animationDelay: `${idx * 100}ms` }}>
+                    <div className="text-3xl font-display font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent group-hover:from-primary-500 group-hover:to-sky-400 transition-colors uppercase">{item.value}</div>
+                    <div className="text-sm font-semibold text-ink-600 group-hover:text-primary-700 transition-colors">{item.label}</div>
                   </Card>
                 ))}
               </div>
             </div>
-            <div className="relative animate-fade-in">
+            <div className="relative animate-fade-in lg:mt-0 mt-8">
               <div
-                className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-gradient-to-br from-primary-300/30 to-sky-300/30 blur-3xl animate-pulse"
+                className="absolute -top-10 -left-10 w-64 h-64 rounded-full bg-gradient-to-br from-primary-400/20 to-sky-400/20 blur-3xl animate-pulse-slow"
                 aria-hidden="true"
               />
-              <Image
-                src="/images/doctor-hero.png"
-                alt="منصة تدريب طبي"
-                width={800}
-                height={800}
-                priority
-                className="w-full max-w-xl mx-auto animate-float drop-shadow-2xl rounded-[28px]"
+              <div
+                className="absolute -bottom-20 -right-10 w-72 h-72 rounded-full bg-gradient-to-tr from-mint-300/10 to-primary-300/10 blur-3xl animate-pulse-slow"
+                style={{ animationDelay: '2s' }}
+                aria-hidden="true"
+              />
+              <LottieAnimation
+                animationData={doctorAnimation}
+                className="w-full max-w-xl mx-auto drop-shadow-2xl rounded-[28px] -scale-x-100"
               />
               <Card
                 variant="featured"
-                className="absolute -bottom-8 right-6 hidden md:block panel-pad-sm w-60 animate-slide-in-left"
+                className="absolute -bottom-8 right-6 hidden md:block panel-pad-sm w-60 animate-slide-in-left shadow-2xl border-white/50 bg-white/90 backdrop-blur-md"
               >
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white flex-shrink-0">
@@ -207,7 +210,7 @@ export default function HomePage() {
             <Card
               key={item.title}
               variant="modern"
-              className="text-right animate-fade-up h-full space-y-4 group"
+              className="text-right animate-fade-up h-full space-y-4 group hover-shine"
               style={{ animationDelay: `${index * 120}ms` }}
             >
               <div className="relative">

@@ -47,7 +47,7 @@ export async function GET(
 
     // For simplicity, we'll mark the certificate as generated and store a URL
     const certificateId = `CERT-${Date.now()}-${enrollment.id}`;
-    
+
     await prisma.enrollment.update({
       where: { id: enrollment.id },
       data: {
@@ -62,7 +62,7 @@ export async function GET(
         id: certificateId,
         courseTitle: enrollment.course.title,
         studentName: enrollment.user.name,
-        doctorName: 'الدكتور عامر سلمان عرابي',
+        doctorName: 'عامر عرابي',
         completionDate: new Date().toLocaleDateString('ar-SA'),
         certificateUrl: `/certificates/${certificateId}.pdf`,
       },
