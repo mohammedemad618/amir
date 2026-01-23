@@ -78,7 +78,7 @@ export const Navbar: React.FC = () => {
               ع
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black text-ink-900 leading-none group-hover:text-primary-700 transition-colors">عامر عرابي</span>
+              <span className="text-lg font-black text-ink-900 leading-none group-hover:text-primary-700 transition-colors">الدكتور عامر عرابي</span>
               <span className="text-[10px] font-bold text-primary-600 uppercase tracking-widest mt-0.5">منصة التدريب الطبي</span>
             </div>
           </Link>

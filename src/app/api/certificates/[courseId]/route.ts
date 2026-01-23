@@ -62,7 +62,7 @@ export async function GET(
         id: certificateId,
         courseTitle: enrollment.course.title,
         studentName: enrollment.user.name,
-        doctorName: 'عامر عرابي',
+        doctorName: 'الدكتور عامر عرابي',
         completionDate: new Date().toLocaleDateString('ar-SA'),
         certificateUrl: `/certificates/${certificateId}.pdf`,
       },

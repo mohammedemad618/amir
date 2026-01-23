@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
                 ع
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-black text-white leading-none">عامر عرابي</span>
+                <span className="text-xl font-black text-white leading-none">الدكتور عامر عرابي</span>
                 <span className="text-xs font-bold text-primary-400 uppercase tracking-widest mt-1">منصة التدريب الطبي</span>
               </div>
             </Link>
@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
 
         {/* Footer Bottom */}
         <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-6 text-sm font-bold text-ink-500 bg-white/5 p-6 rounded-2xl border border-white/5">
-          <p>© {new Date().getFullYear()} عامر عرابي. جميع الحقوق محفوظة.</p>
+          <p>© {new Date().getFullYear()} الدكتور عامر عرابي. جميع الحقوق محفوظة.</p>
           <div className="flex gap-8">
             <Link href="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
             <Link href="/terms" className="hover:text-white transition-colors">الشروط والأحكام</Link>
