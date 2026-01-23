@@ -1,0 +1,144 @@
+import React from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { MedicalIllustration } from '@/components/ui/MedicalIllustration';
+
+export default function HomePage() {
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="container py-16 lg:py-20">
+        <div className="relative overflow-hidden rounded-3xl bg-hero-glow border border-ink-100/60 shadow-soft">
+          <div className="absolute inset-0 subtle-grid opacity-30" aria-hidden="true" />
+          <div className="relative px-6 py-16 md:px-12 lg:px-16 flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1 space-y-6 animate-fade-up">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-ink-900 leading-tight tracking-tight">
+                λ.λΕζΈ ¦ϋλ"λSλ. ϊωλS υπ¦ρυλ?λSΈ λ?λS υλ"¦§ψλSΈ υλ"ϋλ"υªλSΈ λ^υλ"ϋλ"υª υλ"λ^χλSλ?λS
+              </h1>
+              <p className="text-lg md:text-xl text-ink-600">
+                ξλ^ρυ¦ λ.¦©ζζΈ λ^ολΞυξυ¦ Ύ¦λ.υλ. ƒ?" ω©ωρΈ λ®ρ λ.λΕ 20 όλΕΈ
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/courses">
+                  <Button variant="primary" size="lg">
+                    υό¦ϋρτ υλ"ξλ^ρυ¦
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button variant="outline" size="lg">
+                    ¦λ^υζλ" υλ"½λΕ
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="flex-1 w-full animate-fade-in">
+              <div className="relative">
+                <div
+                  className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-primary-200/40 blur-3xl"
+                  aria-hidden="true"
+                />
+                <MedicalIllustration
+                  id="doctorClipboard"
+                  alt="ϊωλSω λ.ϋ λ"λ^πΈ"
+                  priority
+                  className="w-full max-w-xl mx-auto animate-float"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="container py-20">
+        <div className="mb-12">
+          <SectionHeading
+            title="λ.λ.λSύυ¦ υλ"λ.λΕζΈ"
+            align="center"
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card variant="elevated" className="text-center animate-fade-up">
+            <div className="mb-6">
+              <MedicalIllustration
+                id="nutritionist"
+                alt="©ζυέλS ¦§ψλSΈ"
+                className="w-full max-w-xs mx-auto"
+              />
+            </div>
+            <h3 className="text-xl font-semibold mb-3 text-ink-900">
+              ξλ^ρυ¦ υλ"¦§ψλSΈ υλ"ϋλ"υªλSΈ
+            </h3>
+            <p className="text-ink-600">
+              ξλ^ρυ¦ ουλ.λ"Έ ¦§ϊλS όυόλSυ¦ λ^λ.¦λ'ξλ.υ¦ υλ"¦§ψλSΈ υλ"ϋλ"υªλSΈ λ"¦ϊωλSλ'λΞυ λ?λS υλ"ϋλ"υª
+            </p>
+          </Card>
+
+          <Card
+            variant="elevated"
+            className="text-center animate-fade-up"
+            style={{ animationDelay: '120ms' }}
+          >
+            <div className="mb-6">
+              <MedicalIllustration
+                id="occupationalTherapy"
+                alt="υλ"ϋλ"υª υλ"λ^χλSλ?λS"
+                className="w-full max-w-xs mx-auto"
+              />
+            </div>
+            <h3 className="text-xl font-semibold mb-3 text-ink-900">
+              ξλ^ρυ¦ υλ"ϋλ"υª υλ"λ^χλSλ?λS
+            </h3>
+            <p className="text-ink-600">
+              ωρυλ.ª λ.¦©ζζΈ λ?λS υλ"ϋλ"υª υλ"λ^χλSλ?λS λ^ΎϋυξΈ υλ"¦λΞλSλ" λ"λ"ϊλ?υλ" λ^υλ"λωυρ
+            </p>
+          </Card>
+
+          <Card
+            variant="elevated"
+            className="text-center animate-fade-up"
+            style={{ animationDelay: '240ms' }}
+          >
+            <div className="mb-6">
+              <MedicalIllustration
+                id="consultationScene"
+                alt="υό¦ουρΈ ϊωλSΈ"
+                className="w-full max-w-xs mx-auto"
+              />
+            </div>
+            <h3 className="text-xl font-semibold mb-3 text-ink-900">υό¦ουρυ¦ λ.¦©ζζΈ</h3>
+            <p className="text-ink-600">
+              Ύλ.λυλΕλSΈ υλ"¦λ^υζλ" λ^υλ"υό¦ουρΈ λ.ϋ υλ"ξλ¦λ^ρ ϋυλ.ρ όλ"λ.υλΕ ϋρυωλS λ.ωυορΈ
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="container pb-20">
+        <div className="relative overflow-hidden rounded-3xl bg-primary-700 text-white shadow-soft">
+          <div className="absolute inset-0 bg-hero-glow opacity-40" aria-hidden="true" />
+          <div className="relative px-6 py-14 md:px-12 text-center space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold font-display">
+              υωξ ρπλ"¦λ υλ"¦ϋλ"λSλ.λSΈ υλ"λSλ^λ.
+            </h2>
+            <p className="text-lg text-primary-100">
+              όªλ" λ?λS πξ ξλ^ρυ¦λΕυ λ^υπζλ" ϋλ"λ% ολΞυξΈ Ύ¦λ.υλ. λ.ϋ¦λ.ξΈ
+            </p>
+            <Link href="/courses">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-white/40 text-white hover:bg-white/10 hover:text-white"
+              >
+                ¦ζλ?π ªλ.λSϋ υλ"ξλ^ρυ¦
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("USER") // "USER" | "ADMIN"
+  status       String    @default("ACTIVE") // "ACTIVE" | "BLOCKED" | "DELETED"
+  createdAt    DateTime  @default(now())
+  enrollments  Enrollment[]
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  category    String
+  description String
+  objectives  String       // JSON string array
+  hours       Int
+  price       Float
+  level       String       // "BEGINNER" | "INTERMEDIATE" | "ADVANCED"
+  thumbnail   String?
+  createdAt   DateTime     @default(now())
+  enrollments Enrollment[]
+  resources   CourseResource[]
+}
+
+model CourseResource {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  description String?
+  url         String
+  type        String   // "FILE" | "LINK" | "MEETING"
+  createdAt   DateTime @default(now())
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Enrollment {
+  id              String          @id @default(cuid())
+  userId          String
+  courseId        String
+  status          String          @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
+  progressPercent Int             @default(0) // 0-100
+  certificateId   String?
+  certificateUrl  String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course          Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
