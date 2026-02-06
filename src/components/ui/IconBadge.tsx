@@ -2,11 +2,11 @@ import React from 'react';
 import { clsx } from 'clsx';
 
 const toneClasses = {
-  primary: 'bg-primary-100 text-primary-700 border-primary-200',
-  sky: 'bg-accent-sky/15 text-accent-sky border-accent-sky/30',
-  coral: 'bg-accent-coral/15 text-accent-coral border-accent-coral/30',
-  sun: 'bg-accent-sun/15 text-accent-sun border-accent-sun/30',
-  mint: 'bg-accent-mint/15 text-accent-mint border-accent-mint/30',
+  primary: 'bg-accent-sun/15 text-ink-900 border-accent-sun/40',
+  sky: 'bg-accent-sky/12 text-accent-sky border-accent-sky/25',
+  coral: 'bg-accent-coral/12 text-accent-coral border-accent-coral/25',
+  sun: 'bg-accent-sun/15 text-ink-900 border-accent-sun/40',
+  mint: 'bg-accent-mint/12 text-accent-mint border-accent-mint/25',
   ink: 'bg-ink-100 text-ink-700 border-ink-200',
 };
 

@@ -1,11 +1,19 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Badge } from '@/components/ui/Badge';
-import { Alert } from '@/components/ui/Alert';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Input,
+  Skeleton,
+  Table,
+} from '@/components/ui';
 
 interface User {
     id: string;
@@ -56,14 +64,14 @@ export default function AdminUsersPage() {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'تم تحديث حالة المستخدم بنجاح' });
+                setMessage({ type: 'success', text: 'تم تحديث حالة المستخدم بنجاح.' });
                 fetchUsers();
             } else {
                 const error = await response.json();
-                setMessage({ type: 'error', text: error.error || 'فشل تحديث الحالة' });
+                setMessage({ type: 'error', text: error.error || 'تعذر تحديث الحالة.' });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الحالة' });
+            setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الحالة.' });
         } finally {
             setActionLoading(null);
             setTimeout(() => setMessage(null), 3000);
@@ -81,18 +89,40 @@ export default function AdminUsersPage() {
 
     if (loading) {
         return (
-            <div className="container section text-center">
-                <p className="text-ink-600">جارٍ تحميل المستخدمين...</p>
+            <div className="container section space-y-6">
+                <Card variant="glass" className="border-accent-sun/15" motion={false}>
+                    <CardContent className="panel-pad-sm space-y-4">
+                        <Skeleton variant="rectangular" height={18} width="35%" />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <Skeleton key={index} variant="rectangular" height={48} className="rounded-2xl" />
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card variant="elevated" motion={false}>
+                    <CardHeader>
+                        <CardTitle>
+                            <Skeleton variant="rectangular" height={18} width="30%" />
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <Skeleton key={index} variant="rectangular" height={18} className="rounded-xl" />
+                        ))}
+                    </CardContent>
+                </Card>
             </div>
         );
     }
 
     return (
         <div className="container section">
-            {/* Header */}
             <div className="mb-8">
                 <h1 className="heading-2">إدارة المستخدمين</h1>
-                <p className="body-md text-ink-600 mt-2">عرض وإدارة جميع مستخدمي النظام</p>
+                <p className="body-md text-ink-600 mt-2">
+                    تحكم كامل في حسابات المتدربين والمشرفين داخل المنصة.
+                </p>
             </div>
 
             {message && (
@@ -101,8 +131,7 @@ export default function AdminUsersPage() {
                 </Alert>
             )}
 
-            {/* Filters */}
-            <Card variant="glass" className="mb-6">
+            <Card variant="glass" className="mb-6 border-accent-sun/15" motion={false}>
                 <CardContent className="panel-pad-sm">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -119,7 +148,7 @@ export default function AdminUsersPage() {
                             <select
                                 value={roleFilter}
                                 onChange={(e) => setRoleFilter(e.target.value)}
-                                className="w-full h-12 px-4 rounded-xl border border-ink-200 bg-white/80 shadow-ring focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                                className="w-full h-12 px-4 rounded-2xl border border-ink-200 bg-white shadow-sm focus:border-accent-sun focus:ring-4 focus:ring-accent-sun/20"
                             >
                                 <option value="ALL">الكل</option>
                                 <option value="USER">متدرب</option>
@@ -131,7 +160,7 @@ export default function AdminUsersPage() {
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                className="w-full h-12 px-4 rounded-xl border border-ink-200 bg-white/80 shadow-ring focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                                className="w-full h-12 px-4 rounded-2xl border border-ink-200 bg-white shadow-sm focus:border-accent-sun focus:ring-4 focus:ring-accent-sun/20"
                             >
                                 <option value="ALL">الكل</option>
                                 <option value="ACTIVE">نشط</option>
@@ -142,66 +171,77 @@ export default function AdminUsersPage() {
                 </CardContent>
             </Card>
 
-            {/* Users Table */}
-            <Card variant="elevated">
-                <CardHeader>
-                    <CardTitle>المستخدمون ({filteredUsers.length})</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
+            {filteredUsers.length === 0 && (
+                <div className="mb-6">
+                    <EmptyState
+                        title="لا توجد نتائج مطابقة"
+                        description="جرّب تعديل الفلاتر أو توسيع نطاق البحث."
+                        actionLabel="إعادة ضبط الفلاتر"
+                        onAction={clearFilters}
+                        variant="search"
+                        size="sm"
+                    />
+                </div>
+            )}
+
+            {filteredUsers.length > 0 && (
+                <Card variant="elevated" motion={false}>
+                    <CardHeader>
+                        <CardTitle>المستخدمون ({filteredUsers.length})</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="overflow-x-auto">
+                        <Table variant="dense">
                             <thead>
-                                <tr className="border-b border-ink-100">
+                                <tr>
                                     <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الاسم</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">البريد الإلكتروني</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الدور</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الحالة</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">تاريخ التسجيل</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredUsers.map((user) => (
-                                    <tr key={user.id} className="border-b border-ink-50 hover:bg-ink-25">
-                                        <td className="py-3 px-4 text-ink-900">{user.name}</td>
-                                        <td className="py-3 px-4 text-ink-600">{user.email}</td>
-                                        <td className="py-3 px-4">
-                                            <Badge variant={user.role === 'ADMIN' ? 'warning' : 'info'}>
-                                                {user.role === 'ADMIN' ? 'مشرف' : 'متدرب'}
-                                            </Badge>
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <Badge variant={user.status === 'ACTIVE' ? 'success' : 'error'}>
-                                                {user.status === 'ACTIVE' ? 'نشط' : 'محظور'}
-                                            </Badge>
-                                        </td>
-                                        <td className="py-3 px-4 text-ink-600">
-                                            {new Date(user.createdAt).toLocaleDateString('ar-SA')}
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <Button
-                                                variant={user.status === 'ACTIVE' ? 'outline' : 'primary'}
-                                                size="sm"
-                                                onClick={() => handleToggleStatus(user.id, user.status)}
-                                                disabled={actionLoading === user.id}
-                                            >
-                                                {actionLoading === user.id
-                                                    ? 'جارٍ...'
-                                                    : user.status === 'ACTIVE'
-                                                        ? 'حظر'
-                                                        : 'إلغاء الحظر'}
-                                            </Button>
-                                        </td>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">البريد الإلكتروني</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الدور</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الحالة</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">تاريخ التسجيل</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الإجراءات</th>
                                     </tr>
-                                ))}
+                                </thead>
+                                <tbody>
+                                    {filteredUsers.map((user) => (
+                                    <tr key={user.id}>
+                                            <td className="py-3 px-4 text-ink-900">{user.name}</td>
+                                            <td className="py-3 px-4 text-ink-600">{user.email}</td>
+                                            <td className="py-3 px-4">
+                                                <Badge variant={user.role === 'ADMIN' ? 'warning' : 'info'}>
+                                                    {user.role === 'ADMIN' ? 'مشرف' : 'متدرب'}
+                                                </Badge>
+                                            </td>
+                                            <td className="py-3 px-4">
+                                                <Badge variant={user.status === 'ACTIVE' ? 'success' : 'error'}>
+                                                    {user.status === 'ACTIVE' ? 'نشط' : 'محظور'}
+                                                </Badge>
+                                            </td>
+                                            <td className="py-3 px-4 text-ink-600">
+                                                {new Date(user.createdAt).toLocaleDateString('ar-SA')}
+                                            </td>
+                                            <td className="py-3 px-4">
+                                                <Button
+                                                    variant={user.status === 'ACTIVE' ? 'outline' : 'primary'}
+                                                    size="sm"
+                                                    onClick={() => handleToggleStatus(user.id, user.status)}
+                                                    disabled={actionLoading === user.id}
+                                                >
+                                                    {actionLoading === user.id
+                                                        ? 'جارٍ...'
+                                                        : user.status === 'ACTIVE'
+                                                            ? 'حظر'
+                                                            : 'إلغاء الحظر'}
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
                             </tbody>
-                        </table>
-                        {filteredUsers.length === 0 && (
-                            <div className="text-center py-8 text-ink-500">لا توجد نتائج</div>
-                        )}
+                        </Table>
                     </div>
                 </CardContent>
             </Card>
+            )}
         </div>
     );
 }

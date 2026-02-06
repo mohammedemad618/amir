@@ -4,11 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { ProgressBar } from '@/components/ui/ProgressBar';
-import { Alert } from '@/components/ui/Alert';
+import { Alert, Badge, Button, Card, EmptyState, ProgressBar } from '@/components/ui';
 
 interface Course {
   id: string;
@@ -28,6 +24,24 @@ interface CourseResource {
   description?: string | null;
   url: string;
   type: string;
+}
+
+interface Lesson {
+  id: string;
+  title: string;
+  content?: string | null;
+  videoUrl?: string | null;
+  duration?: number | null;
+  order: number;
+  isFree: boolean;
+  createdAt?: string;
+}
+
+interface Module {
+  id: string;
+  title: string;
+  order: number;
+  lessons: Lesson[];
 }
 
 const levelLabels = {
@@ -50,10 +64,12 @@ export default function CourseDetailPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolled, setEnrolled] = useState(false);
+  const [enrollmentStatus, setEnrollmentStatus] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [enrolling, setEnrolling] = useState(false);
   const [error, setError] = useState('');
   const [resources, setResources] = useState<CourseResource[]>([]);
+  const [modules, setModules] = useState<Module[]>([]);
 
   useEffect(() => {
     fetchCourse();
@@ -69,6 +85,8 @@ export default function CourseDetailPage() {
       }
       const data = await res.json();
       setCourse(data.course);
+      setModules([]);
+      setResources([]);
     } catch (error) {
       console.error('Error fetching course:', error);
       router.push('/courses');
@@ -79,15 +97,21 @@ export default function CourseDetailPage() {
 
   const checkEnrollment = async () => {
     try {
-      const res = await fetch(`/api/enrollments?courseId=${courseId}`);
+      const res = await fetch(`/api/enrollments?courseId=${courseId}&includePending=true`, {
+        cache: 'no-store',
+      });
       if (!res.ok) return;
       const data = await res.json();
-      const hasEnrollment = Array.isArray(data.enrollments) && data.enrollments.length > 0;
-      setEnrolled(hasEnrollment);
+      const enrollment = Array.isArray(data.enrollments) ? data.enrollments[0] : null;
+      const status = enrollment?.status ?? null;
+      const hasAccess = status === 'APPROVED' || status === 'COMPLETED';
+      setEnrollmentStatus(status);
+      setEnrolled(hasAccess);
 
-      if (hasEnrollment) {
+      if (hasAccess) {
         // بعد الموافقة، اجلب محتوى الدورة
         fetchResources();
+        fetchModules();
       }
     } catch (error) {
       console.error('Error checking enrollment:', error);
@@ -96,12 +120,23 @@ export default function CourseDetailPage() {
 
   const fetchResources = async () => {
     try {
-      const res = await fetch(`/api/courses/${courseId}/resources`);
+      const res = await fetch(`/api/courses/${courseId}/resources`, { cache: 'no-store' });
       if (!res.ok) return;
       const data = await res.json();
       setResources(data.resources || []);
     } catch (error) {
       console.error('Error fetching course resources:', error);
+    }
+  };
+
+  const fetchModules = async () => {
+    try {
+      const res = await fetch(`/api/courses/${courseId}/modules`, { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      setModules(data.modules || []);
+    } catch (error) {
+      console.error('Error fetching course modules:', error);
     }
   };
 
@@ -126,7 +161,8 @@ export default function CourseDetailPage() {
         return;
       }
 
-      setEnrolled(true);
+      setEnrollmentStatus('PENDING');
+      setEnrolled(false);
       // بعد الموافقة من المشرف سيتمكن المتدرب من رؤية المحتوى عند تحديث الصفحة
       router.refresh();
     } catch (err) {
@@ -148,7 +184,26 @@ export default function CourseDetailPage() {
     return null;
   }
 
-  const objectives = course.objectives ? JSON.parse(course.objectives) : [];
+  const parseObjectives = (value?: string) => {
+    if (!value) return [] as string[];
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item) => typeof item === 'string') as string[];
+      }
+      if (typeof parsed === 'string') {
+        return [parsed];
+      }
+    } catch (_) {
+      // Fallback to newline-separated text
+    }
+    return value
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean);
+  };
+
+  const objectives = parseObjectives(course.objectives);
   const courseDetails = [
     { label: 'مدة الدورة', value: `${course.hours} ساعة` },
     { label: 'المستوى', value: levelLabels[course.level] },
@@ -171,7 +226,7 @@ export default function CourseDetailPage() {
             </div>
           )}
 
-          <Card variant="glass" className="panel-pad space-y-4">
+          <Card variant="glass" className="panel-pad space-y-4 border-accent-sun/15">
             <div className="flex flex-wrap gap-2">
               <Badge variant="neutral">
                 {course.category === 'nutrition' ? 'التغذية العلاجية' : 'العلاج الوظيفي'}
@@ -182,7 +237,7 @@ export default function CourseDetailPage() {
             <p className="body-lg whitespace-pre-line">{course.description}</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {courseDetails.map((item) => (
-                <div key={item.label} className="rounded-2xl border border-ink-200 bg-white/70 panel-pad-sm">
+                <div key={item.label} className="rounded-2xl border border-accent-sun/15 bg-white/80 panel-pad-sm">
                   <div className="text-sm text-ink-500">{item.label}</div>
                   <div className="text-lg font-semibold text-ink-900">{item.value}</div>
                 </div>
@@ -191,7 +246,7 @@ export default function CourseDetailPage() {
           </Card>
 
           {objectives.length > 0 && (
-            <Card variant="glass" className="panel-pad space-y-4">
+            <Card variant="glass" className="panel-pad space-y-4 border-accent-sun/15">
               <h2 className="heading-3">محاور التعلم</h2>
               <ul className="space-y-2 list-disc list-inside text-ink-700">
                 {objectives.map((objective: string, index: number) => (
@@ -201,7 +256,7 @@ export default function CourseDetailPage() {
             </Card>
           )}
 
-          <Card variant="glass" className="panel-pad space-y-4">
+          <Card variant="glass" className="panel-pad space-y-4 border-accent-sun/15">
             <h2 className="heading-3">محتوى الدورة يشمل</h2>
             <ul className="space-y-2 text-ink-700">
               <li>مذكرات تطبيقية وقوالب جاهزة للاستخدام.</li>
@@ -218,14 +273,71 @@ export default function CourseDetailPage() {
                 <ProgressBar value={progress} label="نسبة الإنجاز" showValue />
               </Card>
 
+              <Card variant="glass" className="panel-pad space-y-4 mt-4 border-accent-sun/15">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="heading-3">الدروس والوحدات</h2>
+                  <Badge variant="modern" size="sm">
+                    {modules.reduce((sum, module) => sum + module.lessons.length, 0)} درس
+                  </Badge>
+                </div>
+
+                {modules.length === 0 ? (
+                  <EmptyState
+                    title="لا توجد دروس بعد"
+                    description="سيتم عرض الدروس هنا بمجرد إضافتها من المشرف."
+                    variant="courses"
+                    size="sm"
+                  />
+                ) : (
+                  <div className="space-y-4">
+                    {modules.map((module) => (
+                      <div
+                        key={module.id}
+                        className="rounded-2xl border border-accent-sun/15 bg-white/80 px-4 py-3"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="font-semibold text-ink-900">{module.title}</div>
+                          <Badge variant="modern" size="sm">
+                            {module.lessons.length} درس
+                          </Badge>
+                        </div>
+                        {module.lessons.length > 0 ? (
+                          <ul className="mt-3 space-y-2">
+                            {module.lessons.map((lesson) => (
+                              <li
+                                key={lesson.id}
+                                className="flex items-start justify-between gap-3 rounded-xl border border-ink-100 bg-white px-3 py-2"
+                              >
+                                <div>
+                                  <div className="font-semibold text-ink-900">{lesson.title}</div>
+                                  <div className="text-xs text-ink-500 mt-1">
+                                    {lesson.duration ? `${lesson.duration} دقيقة` : 'بدون مدة'} ·{' '}
+                                    {lesson.isFree ? 'مجاني' : 'محتوى مدفوع'}
+                                  </div>
+                                </div>
+                                <Badge variant={lesson.isFree ? 'success' : 'neutral'} size="sm">
+                                  {lesson.isFree ? 'مجاني' : 'محجوز'}
+                                </Badge>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="mt-3 text-sm text-ink-500">لا توجد دروس داخل هذه الوحدة بعد.</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card>
+
               {resources.length > 0 && (
-                <Card variant="glass" className="panel-pad space-y-4 mt-4">
+                <Card variant="glass" className="panel-pad space-y-4 mt-4 border-accent-sun/15">
                   <h2 className="heading-3">مواد الدورة وروابط الحضور</h2>
                   <ul className="space-y-3">
                     {resources.map((resource) => (
                       <li
                         key={resource.id}
-                        className="flex items-start justify-between gap-3 rounded-2xl border border-ink-200 bg-white/70 px-4 py-3"
+                        className="flex items-start justify-between gap-3 rounded-2xl border border-accent-sun/15 bg-white/80 px-4 py-3"
                       >
                         <div>
                           <div className="font-semibold text-ink-900">{resource.title}</div>
@@ -262,7 +374,7 @@ export default function CourseDetailPage() {
         </div>
 
         <div className="lg:col-span-1 space-y-6">
-          <Card variant="glass" className="sticky top-24 panel-pad space-y-6">
+          <Card variant="glass" className="sticky top-24 panel-pad space-y-6 border-accent-sun/15">
             <div>
               <h3 className="heading-3 mb-4">تفاصيل التسجيل</h3>
               <div className="space-y-3 text-ink-700">
@@ -272,7 +384,7 @@ export default function CourseDetailPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-semibold">السعر:</span>
-                  <span className="text-primary-700 font-semibold text-lg">
+                  <span className="text-accent-sun font-semibold text-lg">
                     {course.price === 0 ? 'مجانية' : `${course.price} ل.س`}
                   </span>
                 </div>
@@ -284,19 +396,28 @@ export default function CourseDetailPage() {
             </div>
 
             <div className="space-y-3">
-              <div className="rounded-2xl border border-ink-200 bg-white/70 panel-pad-sm text-sm text-ink-600">
+              <div className="rounded-2xl border border-accent-sun/15 bg-white/80 panel-pad-sm text-sm text-ink-600">
                 الوصول متاح على جميع الأجهزة مع تحديثات مستمرة للمحتوى.
               </div>
-              <div className="rounded-2xl border border-ink-200 bg-white/70 panel-pad-sm text-sm text-ink-600">
+              <div className="rounded-2xl border border-accent-sun/15 bg-white/80 panel-pad-sm text-sm text-ink-600">
                 متابعة دورية وتقارير تقدم لتحديد نقاط القوة.
               </div>
             </div>
 
             {error && <Alert variant="error">{error}</Alert>}
+            {enrollmentStatus === 'PENDING' && (
+              <Alert variant="info">
+                تم إرسال طلب التسجيل وهو قيد المراجعة. سيتم تفعيل المحتوى فور الموافقة.
+              </Alert>
+            )}
 
             {enrolled ? (
               <Button variant="primary" className="w-full" disabled>
                 مسجل بالفعل
+              </Button>
+            ) : enrollmentStatus === 'PENDING' ? (
+              <Button variant="outline" className="w-full" disabled>
+                الطلب قيد المراجعة
               </Button>
             ) : (
               <Button

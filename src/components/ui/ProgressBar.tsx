@@ -20,24 +20,24 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
     };
 
     const variantClasses = {
-      primary: 'bg-gradient-to-r from-primary-600 to-primary-400',
-      success: 'bg-gradient-to-r from-success to-emerald-400',
-      warning: 'bg-gradient-to-r from-warning to-amber-300',
+      primary: 'bg-gradient-to-r from-primary-900 via-primary-700 to-accent-sun',
+      success: 'bg-success',
+      warning: 'bg-warning',
     };
 
     return (
       <div ref={ref} className={clsx('w-full', className)} {...props}>
         {(label || showValue) && (
           <div className="mb-2 flex items-center justify-between px-0.5">
-            {label && <span className="text-sm font-bold text-ink-800">{label}</span>}
+            {label && <span className="text-sm font-semibold text-ink-800">{label}</span>}
             {showValue && (
-              <span className="text-xs font-black text-primary-600 bg-primary-50 px-2 py-0.5 rounded-lg border border-primary-100">
+              <span className="text-xs font-semibold text-ink-900 bg-accent-sun/20 px-2 py-0.5 rounded-lg border border-accent-sun/40">
                 {Math.round(clampedValue)}%
               </span>
             )}
           </div>
         )}
-        <div className={clsx('w-full overflow-hidden rounded-full bg-ink-100/50 shadow-inner', sizeClasses[size])}>
+        <div className={clsx('w-full overflow-hidden rounded-full bg-ink-100/60 shadow-inner', sizeClasses[size])}>
           <div
             className={clsx('h-full transition-all duration-700 ease-out rounded-full shadow-sm', variantClasses[variant])}
             style={{ width: `${clampedValue}%` }}
@@ -54,3 +54,4 @@ export const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
 );
 
 ProgressBar.displayName = 'ProgressBar';
+

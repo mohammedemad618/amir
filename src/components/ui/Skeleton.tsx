@@ -24,7 +24,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   return (
     <div
       className={clsx(
-        'animate-pulse bg-gradient-to-r from-ink-100 via-ink-50 to-ink-100 bg-[length:200%_100%] animate-shimmer',
+        'animate-pulse bg-gradient-to-r from-ink-100 via-accent-sun/10 to-ink-100 bg-[length:200%_100%] animate-shimmer',
         variantClasses[variant],
         className
       )}
@@ -59,7 +59,7 @@ export const SkeletonText: React.FC<{ lines?: number; className?: string }> = ({
 
 export const CourseCardSkeleton: React.FC = () => {
   return (
-    <div className="rounded-3xl border border-ink-100 bg-white shadow-soft overflow-hidden">
+    <div className="rounded-3xl border border-accent-sun/15 bg-white/90 shadow-soft overflow-hidden">
       <Skeleton variant="rectangular" className="h-48 w-full rounded-none" />
       <div className="p-6 space-y-6">
         <div className="space-y-3">

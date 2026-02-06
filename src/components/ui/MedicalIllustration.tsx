@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -14,8 +14,6 @@ export interface MedicalIllustrationProps {
   sizes?: string;
 }
 
-// High-quality medical images from Unsplash (free to use, no attribution required)
-// These are temporary until you add local images to /public/illustrations/medical/
 const unsplashImages: Record<string, string> = {
   doctorClipboard: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&h=600&fit=crop&q=85',
   nutritionist: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=600&fit=crop&q=85',
@@ -38,10 +36,10 @@ export const MedicalIllustration: React.FC<MedicalIllustrationProps> = ({
     console.warn(`Illustration with id "${id}" not found`);
     return (
       <div
-        className={`flex items-center justify-center bg-ink-50 rounded-3xl border border-dashed border-ink-200 ${className}`}
+        className={`flex items-center justify-center bg-white/80 rounded-3xl border border-accent-sun/15 ${className}`}
         style={{ width, height, minHeight: height }}
       >
-        <div className="text-center p-4 text-ink-500">
+        <div className="text-center p-4 text-ink-600">
           <p className="text-sm">الصورة غير متوفرة</p>
         </div>
       </div>
@@ -49,10 +47,6 @@ export const MedicalIllustration: React.FC<MedicalIllustrationProps> = ({
   }
 
   const altText = alt || illustration.title;
-  
-  // Use Unsplash images directly (they will be used until local images are added)
-  // When you add local images to /public/illustrations/medical/, 
-  // update this component to check for local images first
   const imageSrc = unsplashImages[id] || illustration.assetPath;
 
   return (

@@ -7,7 +7,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:push": "prisma db push",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "db:push": "prisma db push && prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "prepare:deploy": "npm run lint && npm run build"
@@ -23,6 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "lottie-react": "^2.4.1",
     "next": "^14.2.35",
+    "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.2",
@@ -31,6 +34,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.2.0",
+    "@testing-library/react": "^14.2.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.6",
@@ -40,10 +45,12 @@
     "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
+    "jsdom": "^24.0.0",
     "postcss": "^8.4.32",
     "prisma": "^6.19.2",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
   }
 }

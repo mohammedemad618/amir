@@ -9,55 +9,51 @@ export const DecorativeCircles: React.FC<DecorativeCirclesProps> = ({ className 
         <div className={`decorative-circles absolute inset-0 pointer-events-none ${className}`} aria-hidden="true">
             {/* Large circle - top right */}
             <div
-                className="absolute rounded-full border border-primary-300/30 opacity-50 animate-float"
+                className="absolute rounded-full border border-accent-sun/35 opacity-35 animate-float-slow"
                 style={{
-                    width: '400px',
-                    height: '400px',
-                    top: '-200px',
-                    right: '-100px',
-                    animationDelay: '0s',
+                    width: '360px',
+                    height: '360px',
+                    top: '-180px',
+                    right: '-120px',
                 }}
             />
 
             {/* Medium circle - top left */}
             <div
-                className="absolute rounded-full border border-sky-300/30 opacity-40 animate-float-slow"
+                className="absolute rounded-full border border-accent-sun/25 opacity-25 animate-float-slower"
                 style={{
-                    width: '300px',
-                    height: '300px',
-                    top: '100px',
-                    left: '-80px',
-                    animationDelay: '1s',
+                    width: '260px',
+                    height: '260px',
+                    top: '120px',
+                    left: '-90px',
                 }}
             />
 
             {/* Small circle - middle right */}
             <div
-                className="absolute rounded-full border border-emerald-300/30 opacity-30 animate-float-slower"
+                className="absolute rounded-full border border-accent-sun/20 opacity-20 animate-float-slow"
                 style={{
-                    width: '180px',
-                    height: '180px',
-                    top: '40%',
-                    right: '8%',
-                    animationDelay: '2s',
+                    width: '160px',
+                    height: '160px',
+                    top: '42%',
+                    right: '10%',
                 }}
             />
 
             {/* Tiny circle - bottom left */}
             <div
-                className="absolute rounded-full border border-amber-300/30 opacity-30 animate-float"
+                className="absolute rounded-full border border-accent-sun/25 opacity-20 animate-float-slower"
                 style={{
                     width: '120px',
                     height: '120px',
-                    bottom: '15%',
+                    bottom: '18%',
                     left: '12%',
-                    animationDelay: '1.5s',
                 }}
             />
 
             {/* Glow Orbs */}
-            <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary-400/5 blur-[100px] rounded-full" />
-            <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-sky-400/5 blur-[100px] rounded-full" />
+            <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-accent-sun/8 blur-[140px] rounded-full animate-glow-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary-400/6 blur-[140px] rounded-full animate-glow-pulse" />
         </div>
     );
 };

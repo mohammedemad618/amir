@@ -19,6 +19,10 @@ export enum Permission {
     MANAGE_ENROLLMENTS = 'MANAGE_ENROLLMENTS',
     VIEW_ENROLLMENTS = 'VIEW_ENROLLMENTS',
 
+    // Booking Management
+    MANAGE_BOOKINGS = 'MANAGE_BOOKINGS',
+    VIEW_BOOKINGS = 'VIEW_BOOKINGS',
+
     // Analytics
     VIEW_ANALYTICS = 'VIEW_ANALYTICS',
 }
@@ -44,6 +48,8 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
         Permission.VIEW_COURSES,
         Permission.MANAGE_ENROLLMENTS,
         Permission.VIEW_ENROLLMENTS,
+        Permission.MANAGE_BOOKINGS,
+        Permission.VIEW_BOOKINGS,
         Permission.VIEW_ANALYTICS,
     ],
 };

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,7 +41,9 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     });
 
-    return NextResponse.json({ courses });
+    const response = NextResponse.json({ courses });
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
   } catch (error) {
     console.error('Courses fetch error:', error);
     return NextResponse.json(

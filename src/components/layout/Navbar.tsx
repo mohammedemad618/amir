@@ -1,18 +1,56 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
+import { Badge, Button } from '@/components/ui';
 import { clsx } from 'clsx';
-import { Badge } from '@/components/ui/Badge';
 
 const navLinks = [
   { href: '/', label: 'الرئيسية' },
   { href: '/courses', label: 'الدورات' },
+  { href: '/booking', label: 'الحجز' },
   { href: '/about', label: 'عن الدكتور' },
   { href: '/contact', label: 'اتصل بنا' },
 ];
+
+const AUTH_CACHE_TTL = 60_000;
+let authCache: { isAuthenticated: boolean; isAdmin: boolean; ts: number } | null = null;
+let authPromise: Promise<{ isAuthenticated: boolean; isAdmin: boolean; ts: number }> | null = null;
+
+const loadAuthState = async () => {
+  const now = Date.now();
+  if (authCache && now - authCache.ts < AUTH_CACHE_TTL) {
+    return authCache;
+  }
+  if (authPromise) {
+    return authPromise;
+  }
+
+  authPromise = fetch('/api/auth/me', { cache: 'no-store' })
+    .then(async (res) => {
+      if (res.ok) {
+        const data = await res.json();
+        authCache = {
+          isAuthenticated: true,
+          isAdmin: data.user.role === 'ADMIN',
+          ts: Date.now(),
+        };
+        return authCache;
+      }
+      authCache = { isAuthenticated: false, isAdmin: false, ts: Date.now() };
+      return authCache;
+    })
+    .catch(() => {
+      authCache = { isAuthenticated: false, isAdmin: false, ts: Date.now() };
+      return authCache;
+    })
+    .finally(() => {
+      authPromise = null;
+    });
+
+  return authPromise;
+};
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -22,25 +60,25 @@ export const Navbar: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     const checkAuth = async () => {
-      try {
-        const res = await fetch('/api/auth/me', { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          setIsAuthenticated(true);
-          setIsAdmin(data.user.role === 'ADMIN');
-        } else if (res.status === 401 || res.status === 403) {
-          setIsAuthenticated(false);
-          setIsAdmin(false);
-        }
-      } catch (err) {
-        console.error('Auth check failed:', err);
-      }
+      const state = await loadAuthState();
+      if (!mounted) return;
+      setIsAuthenticated(state.isAuthenticated);
+      setIsAdmin(state.isAdmin);
     };
 
     checkAuth();
-    window.addEventListener('auth-change', checkAuth);
-    return () => window.removeEventListener('auth-change', checkAuth);
+    const handleAuthChange = () => {
+      authCache = null;
+      checkAuth();
+    };
+    window.addEventListener('auth-change', handleAuthChange);
+    return () => {
+      mounted = false;
+      window.removeEventListener('auth-change', handleAuthChange);
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -51,8 +89,13 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
+    authCache = null;
     setIsAuthenticated(false);
     setIsAdmin(false);
     window.dispatchEvent(new Event('auth-change'));
@@ -62,28 +105,30 @@ export const Navbar: React.FC = () => {
   return (
     <nav
       className={clsx(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-3',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-3',
         isScrolled
-          ? 'bg-white/80 shadow-glass backdrop-blur-xl border-b border-primary-100/30 py-2'
+          ? 'bg-white/90 shadow-sm backdrop-blur-md border-b border-accent-sun/30 py-2'
           : 'bg-transparent'
       )}
       role="navigation"
       aria-label="القائمة الرئيسية"
     >
       <div className="container">
-        <div className="flex items-center justify-between h-16 px-4 bg-white/40 backdrop-blur-md rounded-[1.5rem] border border-white/60 shadow-sm">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group transition-transform active:scale-95">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center text-white font-black text-xl shadow-lg ring-4 ring-primary-500/10 group-hover:rotate-3 transition-transform">
+        <div className="flex items-center justify-between h-16 px-4 bg-white/80 backdrop-blur-md rounded-2xl border border-accent-sun/25 shadow-sm">
+          <Link href="/" className="flex items-center gap-3 group transition-transform active:scale-95">
+            <div className="w-10 h-10 rounded-xl bg-primary-900 flex items-center justify-center text-white font-semibold text-xl shadow-sm ring-4 ring-accent-sun/20">
               ع
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black text-ink-900 leading-none group-hover:text-primary-700 transition-colors">الدكتور عامر عرابي</span>
-              <span className="text-[10px] font-bold text-primary-600 uppercase tracking-widest mt-0.5">منصة التدريب الطبي</span>
+              <span className="text-lg font-semibold text-ink-900 leading-none group-hover:text-accent-sun transition-colors">
+                الدكتور عامر عربي
+              </span>
+              <span className="text-[11px] font-semibold text-ink-500 uppercase tracking-widest mt-0.5">
+                منصة التدريب الطبي
+              </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -92,46 +137,47 @@ export const Navbar: React.FC = () => {
                   key={link.href}
                   href={link.href}
                   className={clsx(
-                    'relative px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 overflow-hidden group',
+                    'relative px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200',
                     isActive
-                      ? 'text-primary-700'
-                      : 'text-ink-600 hover:text-primary-600'
+                      ? 'text-ink-900 bg-accent-sun/15'
+                      : 'text-ink-600 hover:text-ink-900 hover:bg-accent-sun/10'
                   )}
                 >
                   <span className="relative z-10">{link.label}</span>
-                  {isActive && (
-                    <div className="absolute inset-0 bg-primary-100/50 -z-0" />
-                  )}
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-primary-500 rounded-full transition-all duration-300 group-hover:w-8" />
                 </Link>
               );
             })}
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <Link href="/booking">
+              <Button variant="accent" size="sm" className="rounded-xl font-semibold px-5">
+                احجز موعدك
+              </Button>
+            </Link>
             {isAuthenticated ? (
               <>
                 {isAdmin && (
                   <Link href="/admin">
-                    <Badge variant="warning" className="py-2 px-4 shadow-sm hover:shadow-md transition-shadow">لوحة الإدارة</Badge>
+                    <Badge variant="warning" className="py-2 px-4">لوحة الإدارة</Badge>
                   </Link>
                 )}
                 <Link href="/dashboard">
-                  <Badge variant="primary" className="py-2 px-4 shadow-sm hover:shadow-md transition-shadow">لوحة التحكم</Badge>
+                  <Badge variant="primary" className="py-2 px-4">لوحة التحكم</Badge>
                 </Link>
-                <Button variant="outline" size="sm" className="rounded-xl font-bold" onClick={handleLogout}>
+                <Button variant="outline" size="sm" className="rounded-xl font-semibold" onClick={handleLogout}>
                   تسجيل الخروج
                 </Button>
               </>
             ) : (
               <>
                 <Link href="/auth/login">
-                  <Button variant="ghost" size="sm" className="rounded-xl font-bold hover:bg-primary-50">
+                  <Button variant="ghost" size="sm" className="rounded-xl font-semibold hover:bg-accent-sun/10">
                     تسجيل الدخول
                   </Button>
                 </Link>
                 <Link href="/auth/login?mode=register">
-                  <Button variant="primary" size="sm" className="rounded-xl font-black px-6 shadow-lg shadow-primary-500/20 active:scale-95 transition-all">
+                  <Button variant="primary" size="sm" className="rounded-xl font-semibold px-6">
                     ابدأ الآن
                   </Button>
                 </Link>
@@ -139,33 +185,30 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-ink-700 hover:bg-primary-50 transition-colors border border-transparent hover:border-primary-100"
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-ink-700 hover:bg-accent-sun/10 transition-colors border border-transparent hover:border-accent-sun/25"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="فتح القائمة"
           >
             <div className="relative w-6 h-5">
-              <span className={clsx("absolute left-0 w-6 h-0.5 bg-current rounded-full transition-all duration-300", isMobileMenuOpen ? "top-2.5 rotate-45" : "top-0")} />
-              <span className={clsx("absolute left-0 top-2.5 w-6 h-0.5 bg-current rounded-full transition-all duration-300", isMobileMenuOpen ? "opacity-0 translate-x-4" : "opacity-100")} />
-              <span className={clsx("absolute left-0 w-6 h-0.5 bg-current rounded-full transition-all duration-300", isMobileMenuOpen ? "top-2.5 -rotate-45" : "top-5")} />
+              <span className={clsx('absolute left-0 w-6 h-0.5 bg-current rounded-full transition-all duration-300', isMobileMenuOpen ? 'top-2.5 rotate-45' : 'top-0')} />
+              <span className={clsx('absolute left-0 top-2.5 w-6 h-0.5 bg-current rounded-full transition-all duration-300', isMobileMenuOpen ? 'opacity-0 translate-x-4' : 'opacity-100')} />
+              <span className={clsx('absolute left-0 w-6 h-0.5 bg-current rounded-full transition-all duration-300', isMobileMenuOpen ? 'top-2.5 -rotate-45' : 'top-5')} />
             </div>
           </button>
         </div>
 
-        {/* Mobile Menu Overlay */}
         <div
           className={clsx(
-            'md:hidden fixed inset-0 top-[88px] bg-ink-900/40 backdrop-blur-sm z-40 transition-opacity duration-300',
+            'md:hidden fixed inset-0 top-[88px] bg-ink-900/20 backdrop-blur-sm z-40 transition-opacity duration-300',
             isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
           )}
           onClick={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Mobile Menu Panel */}
         <div
           className={clsx(
-            'md:hidden fixed top-[88px] left-4 right-4 bg-white/95 backdrop-blur-xl rounded-[2rem] border border-primary-100/50 shadow-2xl z-50 p-6 space-y-4 transition-all duration-500 ease-spring',
+            'md:hidden fixed top-[88px] left-4 right-4 bg-white/95 backdrop-blur-md rounded-[2rem] border border-accent-sun/25 shadow-card z-50 p-6 space-y-4 transition-all duration-300',
             isMobileMenuOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-10 scale-95 pointer-events-none'
           )}
         >
@@ -177,39 +220,44 @@ export const Navbar: React.FC = () => {
                   key={link.href}
                   href={link.href}
                   className={clsx(
-                    'flex items-center justify-between px-6 py-4 rounded-2xl text-base font-bold transition-all',
+                    'flex items-center justify-between px-6 py-4 rounded-2xl text-base font-semibold transition-all',
                     isActive
-                      ? 'text-primary-700 bg-primary-50 ring-1 ring-primary-100'
-                      : 'text-ink-700 hover:bg-ink-50'
+                      ? 'text-ink-900 bg-accent-sun/15 ring-1 ring-accent-sun/30'
+                      : 'text-ink-700 hover:bg-accent-sun/10'
                   )}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
-                  {isActive && <div className="w-2 h-2 rounded-full bg-primary-600 animate-pulse" />}
+                  {isActive && <div className="w-2 h-2 rounded-full bg-primary-900" />}
                 </Link>
               );
             })}
           </div>
 
           <div className="pt-4 flex flex-col gap-3">
+            <Link href="/booking" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button variant="accent" className="w-full py-6 rounded-2xl text-lg font-semibold">
+                احجز موعدك
+              </Button>
+            </Link>
             {isAuthenticated ? (
               <>
                 {isAdmin && (
                   <Link href="/admin" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full py-6 rounded-2xl font-bold">لوحة الإدارة</Button>
+                    <Button variant="outline" className="w-full py-6 rounded-2xl font-semibold">لوحة الإدارة</Button>
                   </Link>
                 )}
                 <Link href="/dashboard" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="primary" className="w-full py-6 rounded-2xl text-lg font-black">لوحة التحكم</Button>
+                  <Button variant="primary" className="w-full py-6 rounded-2xl text-lg font-semibold">لوحة التحكم</Button>
                 </Link>
               </>
             ) : (
               <>
                 <Link href="/auth/login" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full py-6 rounded-2xl font-bold">تسجيل الدخول</Button>
+                  <Button variant="outline" className="w-full py-6 rounded-2xl font-semibold">تسجيل الدخول</Button>
                 </Link>
                 <Link href="/auth/login?mode=register" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="primary" className="w-full py-6 rounded-2xl text-lg font-black">إنشاء حساب</Button>
+                  <Button variant="primary" className="w-full py-6 rounded-2xl text-lg font-semibold">إنشاء حساب</Button>
                 </Link>
               </>
             )}

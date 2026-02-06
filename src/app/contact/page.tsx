@@ -4,19 +4,20 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { contactSchema } from '@/utils/validations';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
-import { Button } from '@/components/ui/Button';
-import { Alert } from '@/components/ui/Alert';
-import { MedicalIllustration } from '@/components/ui/MedicalIllustration';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { IconBadge } from '@/components/ui/IconBadge';
-import { LottieAnimation } from '@/components/ui/LottieAnimation';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  DecorativeCircles,
+  DotPattern,
+  IconBadge,
+  Input,
+  LottieAnimation,
+  SectionHeading,
+  Textarea,
+} from '@/components/ui';
 import chatAnimation from '../../../public/animations/chat-doctor.json';
-import { DecorativeCircles } from '@/components/ui/DecorativeCircles';
-import { DotPattern } from '@/components/ui/DotPattern';
-import { Badge } from '@/components/ui/Badge';
 import type { z } from 'zod';
 
 type ContactFormData = z.infer<typeof contactSchema>;
@@ -38,7 +39,7 @@ export default function ContactPage() {
     try {
       setError('');
       console.log('Contact form data:', data);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setSubmitted(true);
       reset();
       setTimeout(() => setSubmitted(false), 5000);
@@ -52,16 +53,16 @@ export default function ContactPage() {
 
   return (
     <div className="container section">
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-hero-glow border border-primary-100 shadow-glow mb-16 p-12 text-center group">
+      <div className="relative overflow-hidden rounded-[2.5rem] bg-hero-glow border border-accent-sun/25 shadow-soft mb-16 p-12 text-center group lux-aurora lux-aurora-lite">
         <DecorativeCircles className="opacity-30 group-hover:opacity-50 transition-opacity duration-1000" />
         <DotPattern className="opacity-10" />
         <div className="relative z-10">
-          <Badge variant="primary" size="md" className="mb-6 py-2 px-5 shadow-lg shadow-primary-500/10">
+          <Badge variant="primary" size="md" className="mb-6 py-2 px-5 shadow-soft">
             تواصل معنا
           </Badge>
           <SectionHeading
             title="تواصل معنا بسهولة"
-            subtitle="نستقبل استفساراتك ونساعدك في اختيار المسار الأنسب لتخصصك المهني."
+            subtitle="فريقنا جاهز لمساعدتك في اختيار المسار الأنسب لتخصصك المهني."
             align="center"
           />
         </div>
@@ -70,41 +71,41 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-10 items-start">
         <div className="space-y-8">
           <Card variant="modern" className="p-8 space-y-8 group relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 rounded-bl-full -mr-16 -mt-16 group-hover:mr-0 group-hover:mt-0 transition-all duration-700" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-sun/15 rounded-bl-full -mr-16 -mt-16 group-hover:mr-0 group-hover:mt-0 transition-all duration-700" />
 
-            <h2 className="heading-3 text-2xl group-hover:text-primary-600 transition-colors">معلومات الاتصال</h2>
+            <h2 className="heading-3 text-2xl group-hover:text-accent-sun transition-colors">معلومات الاتصال</h2>
 
             <div className="space-y-6 text-ink-700">
-              <div className="flex items-center gap-5 p-4 rounded-2xl bg-white border border-ink-100 hover:border-primary-200 hover:shadow-md transition-all group/item">
+              <div className="flex items-center gap-5 p-4 rounded-2xl bg-white border border-accent-sun/25 hover:border-accent-sun/40 transition-all group/item">
                 <IconBadge tone="sky" className="w-12 h-12 shadow-sm group-hover/item:scale-110 transition-transform">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                     <path d="M5 4h4l2 5-3 2a13 13 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
                   </svg>
                 </IconBadge>
                 <div>
-                  <div className="text-xs text-ink-500 font-bold uppercase tracking-wider mb-0.5">الهاتف مباشر</div>
-                  <a href={`tel:${phoneNumber}`} className="text-lg font-black text-ink-900 hover:text-primary-600 transition-colors">
+                  <div className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-0.5">هاتف مباشر</div>
+                  <a href={`tel:${phoneNumber}`} className="text-lg font-semibold text-ink-900 hover:text-accent-sun transition-colors">
                     {phoneNumber}
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-5 p-4 rounded-2xl bg-white border border-ink-100 hover:border-mint-200 hover:shadow-md transition-all group/item">
+              <div className="flex items-center gap-5 p-4 rounded-2xl bg-white border border-accent-sun/25 hover:border-accent-sun/40 transition-all group/item">
                 <IconBadge tone="mint" className="w-12 h-12 shadow-sm group-hover/item:scale-110 transition-transform">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                     <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
                   </svg>
                 </IconBadge>
                 <div>
-                  <div className="text-xs text-ink-500 font-bold uppercase tracking-wider mb-0.5">دردشة سريعة</div>
-                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-lg font-black text-ink-900 hover:text-primary-600 transition-colors flex items-center gap-2">
+                  <div className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-0.5">دردشة سريعة</div>
+                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-ink-900 hover:text-accent-sun transition-colors flex items-center gap-2">
                     عبر واتساب
-                    <span className="flex h-2 w-2 rounded-full bg-mint-500 animate-ping" />
+                    <span className="flex h-2 w-2 rounded-full bg-accent-mint opacity-70" />
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-5 p-4 rounded-2xl bg-white border border-ink-100 hover:border-sun-200 hover:shadow-md transition-all group/item">
+              <div className="flex items-center gap-5 p-4 rounded-2xl bg-white border border-accent-sun/25 hover:border-accent-sun/40 transition-all group/item">
                 <IconBadge tone="sun" className="w-12 h-12 shadow-sm group-hover/item:scale-110 transition-transform">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
                     <path d="M12 22s7-5 7-12a7 7 0 0 0-14 0c0 7 7 12 7 12z" />
@@ -112,8 +113,8 @@ export default function ContactPage() {
                   </svg>
                 </IconBadge>
                 <div>
-                  <div className="text-xs text-ink-500 font-bold uppercase tracking-wider mb-0.5">الموقع</div>
-                  <p className="text-lg font-black text-ink-900">سوريا - طرطوس</p>
+                  <div className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-0.5">الموقع</div>
+                  <p className="text-lg font-semibold text-ink-900">سوريا - طرطوس</p>
                 </div>
               </div>
             </div>
@@ -121,7 +122,7 @@ export default function ContactPage() {
             <Button
               variant="accent"
               type="button"
-              className="w-full py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all font-black text-lg gap-3"
+              className="w-full py-6 rounded-2xl shadow-soft transition-all font-semibold text-base gap-3"
               onClick={() => window.open(whatsappLink, '_blank', 'noopener,noreferrer')}
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -131,16 +132,16 @@ export default function ContactPage() {
             </Button>
           </Card>
 
-          <Card variant="modern" className="p-6 bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-xl group overflow-hidden relative text-center">
+          <Card variant="modern" className="p-6 bg-primary-900 text-white shadow-card group overflow-hidden relative text-center">
             <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 blur-2xl rounded-full translate-x-12 -translate-y-12" />
             <LottieAnimation
               animationData={chatAnimation}
-              className="w-48 h-48 mx-auto -mb-6"
+              className="w-48 h-48 mx-auto -mb-6 lottie-luxe"
             />
             <div className="relative flex items-center justify-center gap-4 mb-4">
-              <h3 className="text-xl font-black text-center">ساعات الاستجابة</h3>
+              <h3 className="text-xl font-semibold text-center">ساعات الاستجابة</h3>
             </div>
-            <div className="space-y-2 opacity-90 font-bold">
+            <div className="space-y-2 opacity-90 font-semibold">
               <p>نرد على كافة الاستفسارات خلال 24 ساعة.</p>
               <div className="mt-4 pt-4 border-t border-white/20 flex justify-between items-center text-sm">
                 <span>السبت - الخميس</span>
@@ -151,8 +152,8 @@ export default function ContactPage() {
         </div>
 
         <div className="relative">
-          <Card variant="modern" className="p-10 shadow-glow relative z-10">
-            <h2 className="heading-3 mb-8 !text-2xl border-b border-ink-100 pb-4">أرسل رسالة مباشرة</h2>
+          <Card variant="modern" className="p-10 shadow-soft relative z-10">
+            <h2 className="heading-3 mb-8 !text-2xl border-b border-accent-sun/25 pb-4">أرسل رسالة مباشرة</h2>
 
             {submitted && (
               <Alert variant="success" className="mb-8" title="تم الإرسال بنجاح">
@@ -203,7 +204,7 @@ export default function ContactPage() {
               <Button
                 type="submit"
                 variant="primary"
-                className="w-full py-6 rounded-2xl text-lg font-black gap-3 shadow-xl shadow-primary-500/10 active:scale-95 transition-all"
+                className="w-full py-6 rounded-2xl text-base font-semibold gap-3 shadow-soft active:scale-95 transition-all"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -223,19 +224,20 @@ export default function ContactPage() {
             </form>
           </Card>
 
-          {/* Background Illustration Decor */}
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-sky-200/20 blur-3xl -z-10" />
+          <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-primary-600/12 blur-3xl -z-10" />
           <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary-200/20 blur-3xl -z-10" />
         </div>
       </div>
 
       <section className="mt-24 mb-16">
-        <Card variant="glass" className="p-8 rounded-[2rem] border-primary-100/30 overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 to-sky-500/5" />
+        <Card variant="glass" className="p-8 rounded-[2rem] border-accent-sun/30 overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-sun/12 to-primary-600/10" />
           <div className="relative flex flex-col items-center text-center space-y-4">
             <Badge variant="modern" className="mb-2">انضم إلينا</Badge>
             <h2 className="heading-3">هل أنت مستعد لبدء مسارك التدريبي؟</h2>
-            <p className="body-md max-w-xl text-ink-600">اكتشف قائمتنا الواسعة من الدورات المتخصصة التي صممت لتنقل مهاراتك إلى المستوى التالي.</p>
+            <p className="body-md max-w-xl text-ink-600">
+              اكتشف قائمة واسعة من الدورات المتخصصة المصممة لتنقل مهاراتك إلى المستوى التالي.
+            </p>
             <Button variant="primary" className="mt-4 px-10">تصفح كافة الدورات</Button>
           </div>
         </Card>

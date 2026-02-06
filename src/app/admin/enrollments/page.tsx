@@ -1,11 +1,18 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { Alert } from '@/components/ui/Alert';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Skeleton,
+} from '@/components/ui';
 
 interface Enrollment {
     id: string;
@@ -60,14 +67,14 @@ export default function AdminEnrollmentsPage() {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'تمت الموافقة على التسجيل بنجاح' });
+                setMessage({ type: 'success', text: 'تمت الموافقة على التسجيل بنجاح.' });
                 fetchEnrollments();
             } else {
                 const error = await response.json();
-                setMessage({ type: 'error', text: error.error || 'فشلت الموافقة' });
+                setMessage({ type: 'error', text: error.error || 'تعذر إتمام الموافقة.' });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء الموافقة' });
+            setMessage({ type: 'error', text: 'حدث خطأ أثناء الموافقة.' });
         } finally {
             setActionLoading(null);
             setTimeout(() => setMessage(null), 3000);
@@ -75,7 +82,7 @@ export default function AdminEnrollmentsPage() {
     };
 
     const handleReject = async (enrollmentId: string) => {
-        if (!confirm('هل أنت متأكد من رفض هذا التسجيل؟')) {
+        if (!confirm('هل أنت متأكد من رفض هذا الطلب؟')) {
             return;
         }
 
@@ -88,14 +95,14 @@ export default function AdminEnrollmentsPage() {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'تم رفض التسجيل' });
+                setMessage({ type: 'success', text: 'تم رفض التسجيل.' });
                 fetchEnrollments();
             } else {
                 const error = await response.json();
-                setMessage({ type: 'error', text: error.error || 'فشل الرفض' });
+                setMessage({ type: 'error', text: error.error || 'تعذر رفض الطلب.' });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء الرفض' });
+            setMessage({ type: 'error', text: 'حدث خطأ أثناء الرفض.' });
         } finally {
             setActionLoading(null);
             setTimeout(() => setMessage(null), 3000);
@@ -124,8 +131,24 @@ export default function AdminEnrollmentsPage() {
 
     if (loading) {
         return (
-            <div className="container section text-center">
-                <p className="text-ink-600">جارٍ تحميل التسجيلات...</p>
+            <div className="container section space-y-6">
+                <Card variant="glass" className="border-accent-sun/15" motion={false}>
+                    <CardContent className="panel-pad-sm space-y-4">
+                        <Skeleton variant="rectangular" height={18} width="35%" />
+                        <Skeleton variant="rectangular" height={12} width="60%" />
+                    </CardContent>
+                </Card>
+                <div className="space-y-4">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                        <Card key={index} variant="elevated" motion={false}>
+                            <CardContent className="panel-pad-sm space-y-3">
+                                <Skeleton variant="rectangular" height={18} width="50%" />
+                                <Skeleton variant="rectangular" height={12} width="70%" />
+                                <Skeleton variant="rectangular" height={12} width="60%" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </div>
         );
     }
@@ -134,11 +157,10 @@ export default function AdminEnrollmentsPage() {
 
     return (
         <div className="container section">
-            {/* Header */}
             <div className="mb-8">
                 <h1 className="heading-2">إدارة التسجيلات</h1>
                 <p className="body-md text-ink-600 mt-2">
-                    الموافقة على طلبات التسجيل في الدورات
+                    مراجعة طلبات التسجيل وإتمام الموافقات بسرعة وأناقة.
                     {pendingCount > 0 && (
                         <Badge variant="warning" className="mr-2">
                             {pendingCount} طلب معلق
@@ -153,15 +175,14 @@ export default function AdminEnrollmentsPage() {
                 </Alert>
             )}
 
-            {/* Filter */}
-            <Card variant="glass" className="mb-6">
+            <Card variant="glass" className="mb-6 border-accent-sun/15" motion={false}>
                 <CardContent className="panel-pad-sm">
-                    <div className="flex gap-4 items-center">
+                    <div className="flex flex-wrap gap-4 items-center">
                         <label className="text-sm font-semibold text-ink-700">تصفية حسب الحالة:</label>
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="h-10 px-4 rounded-xl border border-ink-200 bg-white/80 shadow-ring focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                            className="h-11 px-4 rounded-2xl border border-ink-200 bg-white shadow-sm focus:border-accent-sun focus:ring-4 focus:ring-accent-sun/20"
                         >
                             <option value="ALL">الكل</option>
                             <option value="PENDING">قيد الانتظار</option>
@@ -173,10 +194,9 @@ export default function AdminEnrollmentsPage() {
                 </CardContent>
             </Card>
 
-            {/* Enrollments List */}
             <div className="space-y-4">
                 {filteredEnrollments.map((enrollment) => (
-                    <Card key={enrollment.id} variant="elevated">
+                    <Card key={enrollment.id} variant="elevated" motion={false}>
                         <CardContent className="panel-pad-sm">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div className="flex-1">
@@ -188,8 +208,7 @@ export default function AdminEnrollmentsPage() {
                                     </div>
                                     <div className="space-y-1 text-sm text-ink-600">
                                         <p>
-                                            <span className="font-semibold">المتدرب:</span> {enrollment.user.name} (
-                                            {enrollment.user.email})
+                                            <span className="font-semibold">المتدرب:</span> {enrollment.user.name} ({enrollment.user.email})
                                         </p>
                                         <p>
                                             <span className="font-semibold">التصنيف:</span> {enrollment.course.category}
@@ -212,7 +231,7 @@ export default function AdminEnrollmentsPage() {
                                             onClick={() => handleApprove(enrollment.id)}
                                             disabled={actionLoading === enrollment.id}
                                         >
-                                            {actionLoading === enrollment.id ? 'جارٍ...' : 'موافقة'}
+                                            {actionLoading === enrollment.id ? 'جارٍ المعالجة...' : 'موافقة'}
                                         </Button>
                                         <Button
                                             variant="outline"
@@ -229,11 +248,12 @@ export default function AdminEnrollmentsPage() {
                 ))}
 
                 {filteredEnrollments.length === 0 && (
-                    <Card variant="glass">
-                        <CardContent className="panel-pad text-center text-ink-500">
-                            لا توجد تسجيلات
-                        </CardContent>
-                    </Card>
+                    <EmptyState
+                        title="لا توجد تسجيلات حالياً"
+                        description="ستظهر طلبات التسجيل الجديدة فور وصولها."
+                        variant="enrollments"
+                        size="sm"
+                    />
                 )}
             </div>
         </div>

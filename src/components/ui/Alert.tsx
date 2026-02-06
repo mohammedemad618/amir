@@ -2,10 +2,10 @@ import React from 'react';
 import { clsx } from 'clsx';
 
 const alertVariants = {
-  success: 'bg-success/5 border-success/20 text-success shadow-sm shadow-success/5',
-  error: 'bg-error/5 border-error/20 text-error shadow-sm shadow-error/5',
-  warning: 'bg-warning/5 border-warning/20 text-warning shadow-sm shadow-warning/5',
-  info: 'bg-info/5 border-info/20 text-info shadow-sm shadow-info/5',
+  success: 'bg-success/10 border-success/25 text-success',
+  error: 'bg-error/10 border-error/25 text-error',
+  warning: 'bg-warning/10 border-warning/25 text-warning',
+  info: 'bg-white/80 border-accent-sun/25 text-ink-700',
 };
 
 const alertIcons = {
@@ -44,7 +44,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         ref={ref}
         role="alert"
         className={clsx(
-          'relative overflow-hidden rounded-2xl border p-4 transition-all duration-300',
+          'relative overflow-hidden rounded-2xl border p-4 transition-all duration-300 backdrop-blur-md shadow-soft',
           alertVariants[variant],
           className
         )}

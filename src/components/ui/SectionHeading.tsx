@@ -33,12 +33,12 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   return (
     <div className={clsx(alignClasses[align], className)} {...props}>
       {eyebrow && (
-        <span className="mb-2 block text-sm font-semibold text-ink-500">{eyebrow}</span>
+        <span className="mb-2 block text-sm font-semibold text-accent-sun">{eyebrow}</span>
       )}
       {showAccent && (
         <span
           className={clsx(
-            'mb-4 block h-1 w-12 rounded-full bg-gradient-to-l from-primary-600 to-accent-sky',
+            'mb-4 block h-1 w-12 rounded-full bg-gradient-to-l from-accent-sun to-primary-600',
             accentAlignClasses[align]
           )}
           aria-hidden="true"

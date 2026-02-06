@@ -17,7 +17,7 @@ export const LottieAnimation: React.FC<LottieAnimationProps> = ({
     autoplay = true,
 }) => {
     return (
-        <div className={className}>
+        <div className={`lottie-root ${className}`.trim()}>
             <Lottie
                 animationData={animationData}
                 loop={loop}

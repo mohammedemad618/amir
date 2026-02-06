@@ -1,12 +1,12 @@
 'use client';
 
-import { RequireRole } from '@/components/auth/RequireRole';
-import { AdminSidebar } from '@/components/admin/AdminSidebar';
+import { RequireRole } from '@/features/auth';
+import { AdminSidebar } from '@/features/admin';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
         <RequireRole role="ADMIN">
-            <div className="flex min-h-screen bg-surface-base">
+            <div className="flex min-h-screen bg-surface-muted">
                 {/* Sidebar */}
                 <AdminSidebar />
 

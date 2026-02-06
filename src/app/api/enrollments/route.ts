@@ -7,12 +7,18 @@ export async function GET(request: NextRequest) {
     const authUser = await requireAuth();
     const searchParams = request.nextUrl.searchParams;
     const courseId = searchParams.get('courseId');
+    const includePending = searchParams.get('includePending');
+
+    const statusFilter =
+      includePending === 'false'
+        ? ['APPROVED', 'COMPLETED']
+        : ['PENDING', 'APPROVED', 'COMPLETED'];
 
     const enrollments = await prisma.enrollment.findMany({
       where: {
         userId: authUser.userId,
         status: {
-          in: ['APPROVED', 'COMPLETED'],
+          in: statusFilter,
         },
         ...(courseId ? { courseId } : {}),
       },

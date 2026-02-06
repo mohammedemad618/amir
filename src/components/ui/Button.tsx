@@ -3,18 +3,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { clsx } from 'clsx';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-3 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-muted disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none',
+  'inline-flex items-center justify-center gap-3 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-muted disabled:pointer-events-none disabled:opacity-50 lux-button',
   {
     variants: {
       variant: {
         primary:
-          'bg-gradient-to-r from-primary-600 via-primary-500 to-primary-400 text-white shadow-soft hover:shadow-lift hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-primary-300',
+          'bg-primary-800 text-white border border-primary-900 shadow-soft hover:bg-primary-900 hover:shadow-lift active:translate-y-[1px] focus-visible:ring-primary-300',
         secondary:
-          'bg-ink-900 text-white shadow-soft hover:bg-ink-800 hover:shadow-lift hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-ink-300',
+          'bg-ink-900 text-white shadow-soft hover:bg-ink-800 hover:shadow-lift active:translate-y-[1px] focus-visible:ring-ink-300',
         accent:
-          'bg-gradient-to-r from-accent-orange to-accent-sun text-white shadow-soft hover:shadow-lift hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-accent-sun',
+          'bg-accent-sun text-ink-900 border border-accent-sun/60 shadow-soft hover:bg-[#B8936A] hover:shadow-lift active:translate-y-[1px] focus-visible:ring-accent-sun',
         outline:
-          'border-2 border-ink-200 bg-white/80 text-ink-800 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 active:scale-[0.98] focus-visible:ring-primary-200',
+          'border border-accent-sun/60 bg-white text-ink-800 hover:border-accent-sun hover:bg-accent-sun/10 active:translate-y-[1px] focus-visible:ring-accent-sun/40',
         ghost:
           'text-ink-700 hover:text-ink-900 hover:bg-ink-100 active:bg-ink-200 focus-visible:ring-ink-200',
       },

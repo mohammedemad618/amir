@@ -5,14 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, registerSchema } from '@/utils/validations';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Alert } from '@/components/ui/Alert';
-import { LottieAnimation } from '@/components/ui/LottieAnimation';
+import { Alert, Button, Card, Input, LottieAnimation } from '@/components/ui';
 import loginAnimation from '../../../../public/animations/login.json';
-import { DecorativeCircles } from '@/components/ui/DecorativeCircles';
-import { DotPattern } from '@/components/ui/DotPattern';
+import { DecorativeCircles, DotPattern } from '@/components/ui';
 
 type FormMode = 'login' | 'register';
 
@@ -65,13 +60,13 @@ function LoginContent() {
 
   return (
     <div className="container section">
-      <div className="relative overflow-hidden rounded-[40px] bg-hero-glow border border-primary-100 shadow-glow p-8 md:p-12 lg:p-16">
+      <div className="relative overflow-hidden rounded-[40px] bg-hero-glow border border-accent-sun/25 shadow-soft p-8 md:p-12 lg:p-16 lux-aurora lux-aurora-lite">
         <DecorativeCircles className="opacity-20" />
         <DotPattern className="opacity-10" />
 
         <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] gap-8 lg:gap-16 items-center">
-          <Card variant="glass" className="glass-card panel-pad shadow-2xl border-white/50">
-            <h1 className="heading-2 text-center mb-8 bg-gradient-to-l from-primary-700 to-primary-500 bg-clip-text text-transparent italic">
+          <Card variant="glass" className="glass-card panel-pad shadow-soft border-accent-sun/25">
+            <h1 className="heading-2 text-center mb-8 text-ink-900">
               {mode === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب جديد'}
             </h1>
 
@@ -90,7 +85,7 @@ function LoginContent() {
                   error={errors.name?.message as string}
                   disabled={isSubmitting}
                   autoComplete="name"
-                  className="bg-white/50 backdrop-blur-sm focus:bg-white transition-all"
+                  className="bg-white focus:bg-white transition-all"
                 />
               )}
 
@@ -102,7 +97,7 @@ function LoginContent() {
                 error={errors.email?.message as string}
                 disabled={isSubmitting}
                 autoComplete="email"
-                className="bg-white/50 backdrop-blur-sm focus:bg-white transition-all"
+                className="bg-white focus:bg-white transition-all"
               />
 
               <Input
@@ -113,28 +108,28 @@ function LoginContent() {
                 error={errors.password?.message as string}
                 disabled={isSubmitting}
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                className="bg-white/50 backdrop-blur-sm focus:bg-white transition-all"
+                className="bg-white focus:bg-white transition-all"
               />
 
-              <Button type="submit" variant="primary" className="w-full py-6 text-lg font-bold hover-shine shadow-xl shadow-primary-500/20" disabled={isSubmitting}>
+              <Button type="submit" variant="primary" className="w-full py-6 text-base font-semibold shadow-soft" disabled={isSubmitting}>
                 {isSubmitting
-                  ? (mode === 'login' ? 'جاري تسجيل الدخول...' : 'جاري إنشاء الحساب...')
+                  ? (mode === 'login' ? 'جارٍ تسجيل الدخول...' : 'جارٍ إنشاء الحساب...')
                   : (mode === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب')}
               </Button>
             </form>
 
-            <div className="mt-8 text-center text-sm text-ink-600 border-t border-ink-100 pt-6">
+            <div className="mt-8 text-center text-sm text-ink-600 border-t border-accent-sun/25 pt-6">
               {mode === 'login' ? (
                 <>
-                  ليس لديك حساب؟{' '}
-                  <button onClick={toggleMode} className="text-primary-700 font-bold hover:underline decoration-2 underline-offset-4">
-                    إنشاء حساب جديد
+                  لا تملك حسابًا؟{' '}
+                  <button onClick={toggleMode} className="text-accent-sun font-semibold hover:underline decoration-2 underline-offset-4">
+                    أنشئ حسابًا جديدًا
                   </button>
                 </>
               ) : (
                 <>
                   لديك حساب بالفعل؟{' '}
-                  <button onClick={toggleMode} className="text-primary-700 font-bold hover:underline decoration-2 underline-offset-4">
+                  <button onClick={toggleMode} className="text-accent-sun font-semibold hover:underline decoration-2 underline-offset-4">
                     تسجيل الدخول
                   </button>
                 </>
@@ -143,23 +138,23 @@ function LoginContent() {
           </Card>
 
           <div className="hidden lg:block space-y-8 animate-fade-in">
-            <Card variant="glass" className="glass-card panel-pad-sm space-y-6 border-white/40">
-              <h2 className="heading-3 bg-gradient-to-r from-primary-700 to-sky-600 bg-clip-text text-transparent font-black">
-                {mode === 'login' ? 'مرحبًا بعودتك' : 'انضم إلينا اليوم'}
+            <Card variant="glass" className="glass-card panel-pad-sm space-y-6 border-accent-sun/25">
+              <h2 className="heading-3 text-ink-900 font-semibold">
+                {mode === 'login' ? 'مرحبًا بعودتك' : 'ابدأ رحلتك المهنية'}
               </h2>
               <p className="body-md font-medium text-ink-700">
                 {mode === 'login'
-                  ? 'تابع تقدمك، استعرض شهاداتك، واستمر في تطوير مهاراتك السريرية.'
-                  : 'ابدأ رحلة تعليمية متميزة في التغذية العلاجية والعلاج الوظيفي بأحدث الوسائل.'}
+                  ? 'ادخل إلى منصتك الراقية لمتابعة المسارات التدريبية وتحقيق أهدافك بثبات.'
+                  : 'أنشئ حسابك للوصول إلى برامج تدريبية مصممة بعناية لممارسي الرعاية الصحية.'}
               </p>
               <ul className="space-y-3">
                 {[
-                  'لوحة متابعة شاملة للتقدم.',
-                  'تقارير دقيقة لأداء الدورات.',
-                  'شهادات رقمية قابلة للتحقق.',
+                  'مسارات تخصصية بتجربة أنيقة وواضحة.',
+                  'شهادات موثوقة تعكس تطورك المهني.',
+                  'متابعة مستمرة مع تقارير تقدم دقيقة.',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-ink-700 font-semibold group/li">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500 group-hover/li:scale-150 transition-transform" />
+                  <li key={item} className="flex items-center gap-3 text-ink-700 font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-sun/70" />
                     {item}
                   </li>
                 ))}
@@ -167,7 +162,7 @@ function LoginContent() {
             </Card>
             <LottieAnimation
               animationData={loginAnimation}
-              className="w-full max-w-md mx-auto drop-shadow-[0_20px_50px_rgba(8,145,178,0.3)] rounded-[32px] transition-transform duration-500"
+              className="w-full max-w-md mx-auto drop-shadow-lg rounded-[32px] transition-transform duration-500 lottie-luxe"
             />
           </div>
         </div>
@@ -180,11 +175,10 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="container section flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-sun"></div>
       </div>
     }>
       <LoginContent />
     </Suspense>
   );
 }
-

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { requireAuth } from '@/lib/auth/guards';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // إرجاع موارد الدورة (ملفات / روابط / اجتماعات) للمستخدم المسجل في الدورة
 export async function GET(
   request: NextRequest,
@@ -33,7 +36,9 @@ export async function GET(
       orderBy: { createdAt: 'asc' },
     });
 
-    return NextResponse.json({ resources });
+    const response = NextResponse.json({ resources });
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
   } catch (error: any) {
     if (error.message === 'Unauthorized') {
       return NextResponse.json(

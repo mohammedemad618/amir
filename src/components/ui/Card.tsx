@@ -3,24 +3,25 @@ import { clsx } from 'clsx';
 
 const cardVariants = {
   default: 'bg-white shadow-soft border border-ink-100',
-  elevated: 'bg-white shadow-card border border-ink-100/70 hover:shadow-lift transition-shadow duration-300',
+  elevated: 'bg-white shadow-card border border-ink-100/80 transition-shadow duration-300',
   bordered: 'bg-white border border-ink-200 shadow-ring',
-  glass: 'bg-white/75 backdrop-blur-xl border border-white/70 shadow-soft',
-  modern: 'bg-white shadow-card border-2 border-ink-100 hover:border-primary-200 hover:shadow-glow transition-all duration-300',
-  featured: 'bg-white shadow-glow-lg border-2 border-primary-200 relative overflow-hidden',
-  interactive: 'bg-white shadow-card border border-ink-100 hover:scale-[1.02] hover:shadow-lift transition-all duration-300 cursor-pointer',
+  glass: 'bg-white/90 backdrop-blur-md border border-ink-100/80 shadow-soft',
+  modern: 'bg-white shadow-soft border border-ink-100 hover:border-accent-sun/40 transition-all duration-300',
+  featured: 'bg-white shadow-card border border-accent-sun/40 relative overflow-hidden',
+  interactive: 'bg-white shadow-soft border border-ink-100 hover:shadow-card transition-all duration-300 cursor-pointer',
 };
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: keyof typeof cardVariants;
+  motion?: boolean;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', children, ...props }, ref) => {
+  ({ className, variant = 'default', motion = true, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={clsx('rounded-2xl p-6', cardVariants[variant], className)}
+        className={clsx('rounded-2xl p-6', motion && 'lux-card', cardVariants[variant], className)}
         {...props}
       >
         {children}

@@ -19,6 +19,7 @@ model User {
   status       String    @default("ACTIVE") // "ACTIVE" | "BLOCKED" | "DELETED"
   createdAt    DateTime  @default(now())
   enrollments  Enrollment[]
+  bookings     Booking[]
 }
 
 model Course {
@@ -86,4 +87,42 @@ model Enrollment {
   course          Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
+  @@index([createdAt])
+}
+
+model BookingSlot {
+  id        String   @id @default(cuid())
+  startAt   DateTime
+  endAt     DateTime
+  capacity  Int      @default(1)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  bookings  Booking[]
+}
+
+model Booking {
+  id        String      @id @default(cuid())
+  slotId    String
+  userId    String
+  status    String      @default("PENDING") // "PENDING" | "CONFIRMED" | "CANCELLED"
+  note      String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  slot      BookingSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([slotId, userId])
+  @@index([createdAt])
+}
+
+model BookingSchedule {
+  id           String   @id
+  daysOfWeek   Int[]    // 0 = Sunday ... 6 = Saturday
+  startTime    String   // HH:mm
+  endTime      String   // HH:mm
+  slotMinutes  Int      @default(30)
+  breakMinutes Int      @default(0)
+  timezone     String   @default("Asia/Riyadh")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

@@ -3,12 +3,12 @@ import { clsx } from 'clsx';
 
 const badgeVariants = {
   neutral: 'bg-ink-50 text-ink-700 border border-ink-100',
-  success: 'bg-success/10 text-success border border-success/20 shadow-sm shadow-success/5',
-  error: 'bg-error/10 text-error border border-error/20 shadow-sm shadow-error/5',
-  warning: 'bg-warning/10 text-warning border border-warning/20 shadow-sm shadow-warning/5',
-  info: 'bg-info/10 text-info border border-info/20 shadow-sm shadow-info/5',
-  primary: 'bg-primary-50 text-primary-700 border border-primary-100 shadow-sm shadow-primary-500/5',
-  modern: 'bg-white/80 backdrop-blur-sm border border-white/50 shadow-glass text-ink-700',
+  success: 'bg-success/10 text-success border border-success/20',
+  error: 'bg-error/10 text-error border border-error/20',
+  warning: 'bg-warning/10 text-warning border border-warning/20',
+  info: 'bg-info/10 text-info border border-info/20',
+  primary: 'bg-accent-sun/15 text-ink-900 border border-accent-sun/40',
+  modern: 'bg-white/90 backdrop-blur-sm border border-ink-100 text-ink-700',
 };
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

@@ -1,11 +1,18 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Badge } from '@/components/ui/Badge';
-import { Alert } from '@/components/ui/Alert';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  Skeleton,
+  Table,
+} from '@/components/ui';
 
 interface Admin {
     id: string;
@@ -72,7 +79,7 @@ export default function AdminAdminsPage() {
 
     const handleAddAdmin = async () => {
         if (!selectedUserId) {
-            setMessage({ type: 'error', text: 'يرجى اختيار مستخدم' });
+            setMessage({ type: 'error', text: 'يرجى اختيار مستخدم.' });
             return;
         }
 
@@ -85,16 +92,16 @@ export default function AdminAdminsPage() {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'تمت ترقية المستخدم إلى مشرف بنجاح' });
+                setMessage({ type: 'success', text: 'تمت ترقية المستخدم إلى مشرف بنجاح.' });
                 setShowAddForm(false);
                 setSelectedUserId('');
                 fetchAdmins();
             } else {
                 const error = await response.json();
-                setMessage({ type: 'error', text: error.error || 'فشلت الترقية' });
+                setMessage({ type: 'error', text: error.error || 'تعذر تنفيذ الترقية.' });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء الترقية' });
+            setMessage({ type: 'error', text: 'حدث خطأ أثناء الترقية.' });
         } finally {
             setActionLoading(null);
             setTimeout(() => setMessage(null), 3000);
@@ -103,7 +110,7 @@ export default function AdminAdminsPage() {
 
     const handleToggleStatus = async (adminId: string, currentStatus: string) => {
         if (adminId === currentUserId) {
-            setMessage({ type: 'error', text: 'لا يمكنك تعطيل حسابك الخاص' });
+            setMessage({ type: 'error', text: 'لا يمكنك تعطيل حسابك الحالي.' });
             setTimeout(() => setMessage(null), 3000);
             return;
         }
@@ -119,14 +126,14 @@ export default function AdminAdminsPage() {
             });
 
             if (response.ok) {
-                setMessage({ type: 'success', text: 'تم تحديث حالة المشرف بنجاح' });
+                setMessage({ type: 'success', text: 'تم تحديث حالة المشرف بنجاح.' });
                 fetchAdmins();
             } else {
                 const error = await response.json();
-                setMessage({ type: 'error', text: error.error || 'فشل تحديث الحالة' });
+                setMessage({ type: 'error', text: error.error || 'تعذر تحديث الحالة.' });
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الحالة' });
+            setMessage({ type: 'error', text: 'حدث خطأ أثناء تحديث الحالة.' });
         } finally {
             setActionLoading(null);
             setTimeout(() => setMessage(null), 3000);
@@ -140,19 +147,37 @@ export default function AdminAdminsPage() {
 
     if (loading) {
         return (
-            <div className="container section text-center">
-                <p className="text-ink-600">جارٍ تحميل المشرفين...</p>
+            <div className="container section space-y-6">
+                <Card variant="glass" className="border-accent-sun/15" motion={false}>
+                    <CardContent className="panel-pad-sm space-y-4">
+                        <Skeleton variant="rectangular" height={18} width="40%" />
+                        <Skeleton variant="rectangular" height={12} width="70%" />
+                    </CardContent>
+                </Card>
+                <Card variant="elevated" motion={false}>
+                    <CardHeader>
+                        <CardTitle>
+                            <Skeleton variant="rectangular" height={18} width="30%" />
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                            <Skeleton key={index} variant="rectangular" height={18} className="rounded-xl" />
+                        ))}
+                    </CardContent>
+                </Card>
             </div>
         );
     }
 
     return (
         <div className="container section">
-            {/* Header */}
-            <div className="mb-8 flex justify-between items-center">
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
                 <div>
                     <h1 className="heading-2">إدارة المشرفين</h1>
-                    <p className="body-md text-ink-600 mt-2">إضافة وإدارة حسابات المشرفين</p>
+                    <p className="body-md text-ink-600 mt-2">
+                        تحكم أنيق بحسابات المشرفين وصلاحياتهم داخل المنصة.
+                    </p>
                 </div>
                 {!showAddForm && (
                     <Button variant="primary" onClick={handleShowAddForm}>
@@ -167,9 +192,8 @@ export default function AdminAdminsPage() {
                 </Alert>
             )}
 
-            {/* Add Admin Form */}
             {showAddForm && (
-                <Card variant="glass" className="mb-6">
+                <Card variant="glass" className="mb-6 border-accent-sun/15" motion={false}>
                     <CardHeader>
                         <CardTitle>إضافة مشرف جديد</CardTitle>
                     </CardHeader>
@@ -181,9 +205,9 @@ export default function AdminAdminsPage() {
                             <select
                                 value={selectedUserId}
                                 onChange={(e) => setSelectedUserId(e.target.value)}
-                                className="w-full h-12 px-4 rounded-xl border border-ink-200 bg-white/80 shadow-ring focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                                className="w-full h-12 px-4 rounded-2xl border border-ink-200 bg-white shadow-sm focus:border-accent-sun focus:ring-4 focus:ring-accent-sun/20"
                             >
-                                <option value="">-- اختر مستخدم --</option>
+                                <option value="">-- اختر مستخدمًا --</option>
                                 {users.map((user) => (
                                     <option key={user.id} value={user.id}>
                                         {user.name} ({user.email})
@@ -207,65 +231,74 @@ export default function AdminAdminsPage() {
                 </Card>
             )}
 
-            {/* Admins Table */}
-            <Card variant="elevated">
-                <CardHeader>
-                    <CardTitle>المشرفون ({admins.length})</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="border-b border-ink-100">
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الاسم</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">البريد الإلكتروني</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الحالة</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">تاريخ الإضافة</th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {admins.map((admin) => (
-                                    <tr key={admin.id} className="border-b border-ink-50 hover:bg-ink-25">
-                                        <td className="py-3 px-4 text-ink-900">
-                                            {admin.name}
-                                            {admin.id === currentUserId && (
-                                                <Badge variant="info" className="mr-2">أنت</Badge>
-                                            )}
-                                        </td>
-                                        <td className="py-3 px-4 text-ink-600">{admin.email}</td>
-                                        <td className="py-3 px-4">
-                                            <Badge variant={admin.status === 'ACTIVE' ? 'success' : 'error'}>
-                                                {admin.status === 'ACTIVE' ? 'نشط' : 'محظور'}
-                                            </Badge>
-                                        </td>
-                                        <td className="py-3 px-4 text-ink-600">
-                                            {new Date(admin.createdAt).toLocaleDateString('ar-SA')}
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <Button
-                                                variant={admin.status === 'ACTIVE' ? 'outline' : 'primary'}
-                                                size="sm"
-                                                onClick={() => handleToggleStatus(admin.id, admin.status)}
-                                                disabled={actionLoading === admin.id || admin.id === currentUserId}
-                                            >
-                                                {actionLoading === admin.id
-                                                    ? 'جارٍ...'
-                                                    : admin.status === 'ACTIVE'
-                                                        ? 'تعطيل'
-                                                        : 'تفعيل'}
-                                            </Button>
-                                        </td>
+            {admins.length === 0 ? (
+                <EmptyState
+                    title="لا يوجد مشرفون حتى الآن"
+                    description="قم بإضافة مشرف جديد لإدارة المنصة."
+                    actionLabel="إضافة مشرف"
+                    onAction={handleShowAddForm}
+                    variant="admins"
+                    size="sm"
+                />
+            ) : (
+                <Card variant="elevated" motion={false}>
+                    <CardHeader>
+                        <CardTitle>المشرفون ({admins.length})</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="overflow-x-auto">
+                            <Table variant="dense">
+                                <thead>
+                                    <tr>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الاسم</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">البريد الإلكتروني</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الحالة</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">تاريخ الإضافة</th>
+                                        <th className="text-right py-3 px-4 text-sm font-semibold text-ink-700">الإجراءات</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {admins.length === 0 && (
-                            <div className="text-center py-8 text-ink-500">لا يوجد مشرفون</div>
-                        )}
-                    </div>
-                </CardContent>
-            </Card>
+                                </thead>
+                                <tbody>
+                                    {admins.map((admin) => (
+                                    <tr key={admin.id}>
+                                            <td className="py-3 px-4 text-ink-900">
+                                                {admin.name}
+                                                {admin.id === currentUserId && (
+                                                    <Badge variant="info" className="mr-2">
+                                                        أنت
+                                                    </Badge>
+                                                )}
+                                            </td>
+                                            <td className="py-3 px-4 text-ink-600">{admin.email}</td>
+                                            <td className="py-3 px-4">
+                                                <Badge variant={admin.status === 'ACTIVE' ? 'success' : 'error'}>
+                                                    {admin.status === 'ACTIVE' ? 'نشط' : 'محظور'}
+                                                </Badge>
+                                            </td>
+                                            <td className="py-3 px-4 text-ink-600">
+                                                {new Date(admin.createdAt).toLocaleDateString('ar-SA')}
+                                            </td>
+                                            <td className="py-3 px-4">
+                                                <Button
+                                                    variant={admin.status === 'ACTIVE' ? 'outline' : 'primary'}
+                                                    size="sm"
+                                                    onClick={() => handleToggleStatus(admin.id, admin.status)}
+                                                    disabled={actionLoading === admin.id || admin.id === currentUserId}
+                                                >
+                                                    {actionLoading === admin.id
+                                                        ? 'جارٍ...'
+                                                        : admin.status === 'ACTIVE'
+                                                            ? 'تعطيل'
+                                                            : 'تفعيل'}
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }

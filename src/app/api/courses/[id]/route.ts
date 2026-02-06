@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { requireAuth } from '@/lib/auth/guards';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -18,7 +21,9 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ course });
+    const response = NextResponse.json({ course });
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
   } catch (error) {
     console.error('Course fetch error:', error);
     return NextResponse.json(
