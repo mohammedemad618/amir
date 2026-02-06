@@ -319,7 +319,8 @@ export async function GET(
     }
 
     const pdfBuffer = await renderToBuffer(<ReceiptDoc booking={booking} qrDataUrl={qrDataUrl} />);
-    return new NextResponse(pdfBuffer, {
+    const pdfArrayBuffer = Uint8Array.from(pdfBuffer).buffer;
+    return new NextResponse(pdfArrayBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `inline; filename="booking-${booking.id}.pdf"`,
