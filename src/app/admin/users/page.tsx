@@ -78,6 +78,12 @@ export default function AdminUsersPage() {
         }
     };
 
+    const clearFilters = () => {
+        setSearchQuery('');
+        setRoleFilter('ALL');
+        setStatusFilter('ALL');
+    };
+
     const filteredUsers = users.filter((user) => {
         const matchesSearch =
             user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
