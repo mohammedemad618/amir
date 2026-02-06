@@ -12,11 +12,11 @@ export async function PATCH(
     const body = await request.json();
     const { title, content, videoUrl, duration, order, isFree } = body;
 
-    const module = await prisma.module.findFirst({
+    const courseModule = await prisma.module.findFirst({
       where: { id: params.moduleId, courseId: params.id },
     });
 
-    if (!module) {
+    if (!courseModule) {
       return NextResponse.json({ error: 'الوحدة غير موجودة.' }, { status: 404 });
     }
 
@@ -61,11 +61,11 @@ export async function DELETE(
   try {
     await requirePermission(Permission.MANAGE_COURSES);
 
-    const module = await prisma.module.findFirst({
+    const courseModule = await prisma.module.findFirst({
       where: { id: params.moduleId, courseId: params.id },
     });
 
-    if (!module) {
+    if (!courseModule) {
       return NextResponse.json({ error: 'الوحدة غير موجودة.' }, { status: 404 });
     }
 

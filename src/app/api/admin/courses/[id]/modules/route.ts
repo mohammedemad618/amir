@@ -55,7 +55,7 @@ export async function POST(
       orderNumber = (maxOrder._max.order ?? 0) + 1;
     }
 
-    const module = await prisma.module.create({
+    const createdModule = await prisma.module.create({
       data: {
         courseId: params.id,
         title,
@@ -63,7 +63,7 @@ export async function POST(
       },
     });
 
-    return NextResponse.json({ module }, { status: 201 });
+    return NextResponse.json({ module: createdModule }, { status: 201 });
   } catch (error: any) {
     if (error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });

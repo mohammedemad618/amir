@@ -28,12 +28,12 @@ export async function PATCH(
     if (title !== undefined) data.title = title;
     if (order !== undefined) data.order = Number(order);
 
-    const module = await prisma.module.update({
+    const updatedModule = await prisma.module.update({
       where: { id: existing.id },
       data,
     });
 
-    return NextResponse.json({ module });
+    return NextResponse.json({ module: updatedModule });
   } catch (error: any) {
     if (error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });

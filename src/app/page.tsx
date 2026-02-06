@@ -285,7 +285,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-10 items-center">
           <Card variant="glass" className="panel-pad space-y-6">
             <span className="text-sm font-semibold text-accent-sun">قصة نجاح</span>
-            <h3 className="heading-3">"التجربة رفعت جودة عملي ووضوح قراراتي السريرية"</h3>
+            <h3 className="heading-3">&ldquo;التجربة رفعت جودة عملي ووضوح قراراتي السريرية&rdquo;</h3>
             <p className="body-md">
               خلال أسابيع قليلة أصبحت أمتلك خطة عملية واضحة للتعامل مع الحالات المعقدة بثقة أعلى.
             </p>

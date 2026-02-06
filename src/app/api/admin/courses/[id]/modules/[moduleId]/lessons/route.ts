@@ -16,11 +16,11 @@ export async function POST(
       return NextResponse.json({ error: 'يرجى إدخال عنوان الدرس.' }, { status: 400 });
     }
 
-    const module = await prisma.module.findFirst({
+    const courseModule = await prisma.module.findFirst({
       where: { id: params.moduleId, courseId: params.id },
     });
 
-    if (!module) {
+    if (!courseModule) {
       return NextResponse.json({ error: 'الوحدة غير موجودة.' }, { status: 404 });
     }
 
